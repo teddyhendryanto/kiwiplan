@@ -2,23 +2,38 @@
   <div class="sidebar-scroll">
     <nav>
       <ul class="nav">
-        <li><a href="{{ route('home') }}" class="active">
-          <i class="lnr lnr-home"></i> <span>Dashboard</span></a>
+        <li><a href="{{ route('home') }}">
+          <span>Dashboard</span></a>
         </li>
+        @role('superuser')
         <li>
-          <a href="#admins" data-toggle="collapse" class="collapsed">
-            <i class="lnr lnr-user"></i> <span>Admin</span>
+          <a href="#users" data-toggle="collapse" class="collapsed">
+            <span>User</span>
             <i class="icon-submenu lnr lnr-chevron-left"></i>
           </a>
-          <div id="admins" class="collapse ">
+          <div id="users" class="collapse ">
             <ul class="nav">
-              <li><a href="{{ route('permissions.index') }}" ><span>Permissions</span></a></li>
-              <li><a href="{{ route('roles.index') }}" ><span>Roles</span></a></li>
-              <li><a href="{{ route('admins.index') }}" ><span>Admins</span></a></li>
+              <li><a href="{{ route('permissions.index') }}" ><span>Permission</span></a></li>
+              <li><a href="{{ route('roles.index') }}" ><span>Role</span></a></li>
+              <li><a href="{{ route('users.index') }}" ><span>User</span></a></li>
             </ul>
           </div>
         </li>
-        <li><a href="charts.html" class=""><i class="lnr lnr-chart-bars"></i> <span>Charts</span></a></li>
+        @endrole
+        @permission('accounting-access')
+        <li>
+          <a href="#accounting" data-toggle="collapse" class="collapsed">
+            <span>Accounting</span>
+            <i class="icon-submenu lnr lnr-chevron-left"></i>
+          </a>
+          <div id="accounting" class="collapse ">
+            <ul class="nav">
+              <li><a href="{{ route('accounting.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
+              <li><a href="{{ route('accounting.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li>
+            </ul>
+          </div>
+        </li>
+        @endpermission
         <li><a href="panels.html" class=""><i class="lnr lnr-cog"></i> <span>Panels</span></a></li>
         <li><a href="notifications.html" class=""><i class="lnr lnr-alarm"></i> <span>Notifications</span></a></li>
         <li>
