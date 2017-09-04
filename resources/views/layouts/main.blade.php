@@ -54,9 +54,9 @@
 	</div>
 	<!-- END WRAPPER -->
 
+	<!-- Jquery-1.12-4 -->
+  <script src="{{ asset('vendor/jquery/jquery-2.1.4.min.js')}}"></script>
 	<!-- Javascript -->
-	<script src="{{ asset('vendor/jquery/jquery.min.js')}}"></script>
-	<script src="{{ asset('vendor/jquery/jquery-1.12.4.js')}}"></script>
 	<script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js')}}"></script>
 	<script src="{{ asset('vendor/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 	<script src="{{ asset('js/common.js')}}"></script>

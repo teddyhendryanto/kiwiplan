@@ -1,6 +1,6 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="brand">
-    <a href="index.html"><img src="assets/img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
+    <a href="index.html"><img src="{{ asset('img/logo-text.png')}}" alt="Karya Indah Multiguna" class="img-responsive logo"></a>
   </div>
   <div class="container-fluid">
     <div class="navbar-btn">
@@ -19,16 +19,30 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
             <i class="lnr lnr-alarm"></i>
-            <span class="badge bg-danger">5</span>
+            @if (count(Auth::user()->unreadNotifications))
+              <span class="badge bg-danger">{{ count(Auth::user()->unreadNotifications) }}</span>
+            @endif
           </a>
-          <ul class="dropdown-menu notifications">
-            <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
-            <li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9 unfinished tasks</a></li>
-            <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Monthly report is available</a></li>
-            <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Weekly meeting in 1 hour</a></li>
-            <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li>
-            <li><a href="#" class="more">See all notifications</a></li>
-          </ul>
+          @if (count(Auth::user()->unreadNotifications) <= 0)
+            <ul class="dropdown-menu notify-drop no-notification">
+              <li> <a href="#">Tidak ada notifikasi</a> </li>
+            </ul>
+          @else
+            <ul class="dropdown-menu notifications">
+              <!-- notify content -->
+              @foreach (Auth::user()->unreadNotifications as $notification)
+                <li onclick="markAsRead('{{$notification->id}}');">
+                  @include('partials.notifications.'.snake_case(class_basename($notification->type)))
+                </li>
+              @endforeach
+              {{-- <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
+              <li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9 unfinished tasks</a></li>
+              <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Monthly report is available</a></li>
+              <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Weekly meeting in 1 hour</a></li>
+              <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li> --}}
+              <li><a href="#" class="more">See all notifications</a></li>
+            </ul>
+          @endif
         </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">

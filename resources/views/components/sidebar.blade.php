@@ -28,12 +28,28 @@
           </a>
           <div id="accounting" class="collapse ">
             <ul class="nav">
-              <li><a href="{{ route('accounting.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
-              <li><a href="{{ route('accounting.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li>
+              {{-- <li><a href="{{ route('accounting.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
+              <li><a href="{{ route('accounting.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li> --}}
             </ul>
           </div>
         </li>
         @endpermission
+        @permission('rollstock-access')
+        <li>
+          <a href="#rollstock" data-toggle="collapse" class="collapsed">
+            <span>Roll Stock</span>
+            <i class="icon-submenu lnr lnr-chevron-left"></i>
+          </a>
+          <div id="rollstock" class="collapse ">
+            <ul class="nav">
+              <li><a href="{{ route('rollstocks.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
+              <li><a href="{{ route('rollstocks.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li>
+              <li><a href="{{ route('rollstocks.stock.index') }}" ><span>Stock</span></a></li>
+            </ul>
+          </div>
+        </li>
+        @endpermission
+        <!--
         <li><a href="panels.html" class=""><i class="lnr lnr-cog"></i> <span>Panels</span></a></li>
         <li><a href="notifications.html" class=""><i class="lnr lnr-alarm"></i> <span>Notifications</span></a></li>
         <li>
@@ -49,6 +65,7 @@
         <li><a href="tables.html" class=""><i class="lnr lnr-dice"></i> <span>Tables</span></a></li>
         <li><a href="typography.html" class=""><i class="lnr lnr-text-format"></i> <span>Typography</span></a></li>
         <li><a href="icons.html" class=""><i class="lnr lnr-linearicons"></i> <span>Icons</span></a></li>
+        -->
       </ul>
     </nav>
   </div>

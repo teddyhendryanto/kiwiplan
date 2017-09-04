@@ -112,17 +112,18 @@
 @section('script')
   <script type="text/javascript">
     $('document').ready(function(){
+      // initialize select2 multiple selection
+      $('.select2-multi').select2();
+      $(".select2-multi").select2().val(
+        {!! json_encode($data->roles()->allRelatedIds()) !!}
+      ).trigger('change');
+
       // initialize parsley;
       $('#form').parsley({
         errorsContainer: function(el) {
             return el.$element.closest('.form-group');
         },
       });
-      // initialize select2 multiple selection
-      $('.select2-multi').select2();
-      $(".select2-multi").select2().val(
-        {!! json_encode($data->roles()->allRelatedIds()) !!}
-      ).trigger('change');
 
     });
   </script>

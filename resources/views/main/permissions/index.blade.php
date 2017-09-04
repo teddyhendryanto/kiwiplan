@@ -4,7 +4,7 @@
 
 @section('pluginscss')
   <!-- DataTables -->
-  <link rel="stylesheet" href="{{ asset('vendor/datatables/dataTables.bootstrap.css') }}">
+  <link rel="stylesheet" href="{{ asset('vendor/datatables/media/css/dataTables.bootstrap.min.css') }}">
 @endsection
 
 @section('breadcrumb')
@@ -56,8 +56,8 @@
 
 @section('pluginsjs')
   <!-- DataTables -->
-	<script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
-	<script src="{{ asset('vendor/datatables/dataTables.bootstrap.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/media/js/dataTables.bootstrap.min.js') }}"></script>
 @endsection
 
 @section('script')

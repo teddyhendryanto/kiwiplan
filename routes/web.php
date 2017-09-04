@@ -11,15 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['middleware' => ['auth','web']], function(){
+  Route::get('/', 'HomeController@index')->name('home');
+  Route::get('/home', 'HomeController@index')->name('home');
 
-Route::group(['middleware' => ['web']], function(){
   // Admin Index
   Route::get('users','UserController@index')->name('users.index'); //->middleware('permission:role-list,role-create,role-edit,role-delete');
   Route::post('users_datatable','UserController@getUsersDatatable')->name('users.ajax.datatable');
@@ -50,11 +47,14 @@ Route::group(['middleware' => ['web']], function(){
   Route::put('permissions/{id}','PermissionController@update')->name('permissions.update'); //->middleware('permission:role-edit');
   Route::delete('permissions/{id}','PermissionController@destroy')->name('permissions.destroy'); //->middleware('permission:role-delete');
 
-  Route::prefix('accounting')->group(function () {
-    Route::get('rollreceive','Accounting\RollReceiveController@index')->name('accounting.rollreceive.index');
-    Route::post('rollreceive','Accounting\RollReceiveController@submit')->name('accounting.rollreceive.submit');
+  Route::prefix('rollstocks')->group(function () {
+    Route::get('rollreceive/{type?}/{value?}','RollStock\RollReceiveController@index')->name('rollstocks.rollreceive.index');
+    Route::post('rollreceive','RollStock\RollReceiveController@submit')->name('rollstocks.rollreceive.submit');
 
-    Route::get('rollusage','Accounting\RollUsageController@index')->name('accounting.rollusage.index');
-    Route::post('rollusage','Accounting\RollUsageController@submit')->name('accounting.rollusage.submit');
+    Route::get('rollusage','RollStock\RollUsageController@index')->name('rollstocks.rollusage.index');
+    Route::post('rollusage','RollStock\RollUsageController@submit')->name('rollstocks.rollusage.submit');
+
+    Route::get('stock','RollStock\RollStockController@index')->name('rollstocks.stock.index');
+    Route::post('stock','RollStock\RollStockController@submit')->name('rollstocks.stock.submit');
   });
 });
