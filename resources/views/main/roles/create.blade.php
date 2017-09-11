@@ -103,14 +103,15 @@
 @section('script')
   <script type="text/javascript">
     $('document').ready(function(){
+      // initialize select2 multiple selection
+      $('.select2-multi').select2();
+
       // initialize parsley;
       $('#form').parsley({
         errorsContainer: function(el) {
             return el.$element.closest('.form-group');
         },
       });
-      // initialize select2 multiple selection
-      $('.select2-multi').select2();
 
     });
   </script>

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 
-use App\RollReceive;
+use App\Models\RollReceive;
 use DB;
 
 class RollReceiveController extends Controller

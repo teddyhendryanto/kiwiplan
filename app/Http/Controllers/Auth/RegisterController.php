@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Traits\GeneralTrait;
 
 class RegisterController extends Controller
 {
+    use GeneralTrait;
+
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -36,7 +39,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
     }
 
     /**
@@ -48,10 +51,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'email' => 'string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'username' => 'required|string|min:5|max:5|unique:users',
+            'name' => 'required|string|min:3|max:255',
+            'email' => 'string|email|max:255',
+            'password' => 'required|string|min:4|confirmed',
         ]);
     }
 
@@ -63,11 +66,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $user = Auth::user();
+
         return User::create([
             'username' => $data['username'],
             'name' => $data['name'],
-            'email' => $data['email'],
+            'email' => $this->emptyStringToNull($data['email']),
             'password' => bcrypt($data['password']),
+            'rstatus' => 'NW',
+            'created_by' => $user->username()
         ]);
     }
 }

@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\ReceiveCheckerCommand',
+        'App\Console\Commands\NotifInputCheckerCommand',
     ];
 
     /**
@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('receive:checker')
+        $schedule->command('notifications:check')
                  ->everyMinute();
     }
 

@@ -7,6 +7,17 @@
         </li>
         @role('superuser')
         <li>
+          <a href="#setup" data-toggle="collapse" class="collapsed">
+            <span>Setup</span>
+            <i class="icon-submenu lnr lnr-chevron-left"></i>
+          </a>
+          <div id="setup" class="collapse ">
+            <ul class="nav">
+              <li><a href="{{ route('notifications.index') }}" ><span>Notifications</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li>
           <a href="#users" data-toggle="collapse" class="collapsed">
             <span>User</span>
             <i class="icon-submenu lnr lnr-chevron-left"></i>
@@ -28,8 +39,21 @@
           </a>
           <div id="accounting" class="collapse ">
             <ul class="nav">
-              {{-- <li><a href="{{ route('accounting.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
-              <li><a href="{{ route('accounting.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li> --}}
+              <li><a href="{{ route('purchase_orders.index') }}"><span>P.O Kertas</span></a></li>
+              <li><a href="{{ route('exchange_rates.index') }}"><span>Kurs</span></a></li>
+              <li>
+                <a href="#accounting-reports" data-toggle="collapse" class="collapsed">
+                  <span>Report<span>
+                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                </a>
+                <div id="accounting-reports" class="collapse ">
+                  <ul class="nav">
+                    <li><a href="{{ route('accounting.rollreceivesummary.index') }}"><span>Sum Penerimaan Roll</span></a></li>
+                    <li><a href="{{ route('accounting.rollusagesummary.index') }}" ><span>Sum Pemakaian Roll</span></a></li>
+                    <li><a href="{{ route('accounting.stocksummary.index') }}"><span>Sum Stock Roll</span></a></li>
+                  </ul>
+                </div>
+              </li>
             </ul>
           </div>
         </li>
@@ -42,15 +66,29 @@
           </a>
           <div id="rollstock" class="collapse ">
             <ul class="nav">
+              <li>
+                <a href="#rollstock-setup" data-toggle="collapse" class="collapsed">
+                  <span>Setup<span>
+                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                </a>
+                <div id="rollstock-setup" class="collapse ">
+                  <ul class="nav">
+                    <li><a href="{{ route('suppliers.index') }}"><span>Supplier Kertas</span></a></li>
+                    <li><a href="{{ route('qualities.index') }}"><span>Kualitas Kertas</span></a></li>
+                    <li><a href="{{ route('gramatures.index') }}"><span>Gramatur Kertas</span></a></li>
+                    <li><a href="{{ route('widths.index') }}"><span>Lebar Kertas</span></a></li>
+                    <li><a href="{{ route('keys.index') }}"><span>Paper Key</span></a></li>
+                  </ul>
+                </div>
+              </li>
               <li><a href="{{ route('rollstocks.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
               <li><a href="{{ route('rollstocks.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li>
-              <li><a href="{{ route('rollstocks.stock.index') }}" ><span>Stock</span></a></li>
+              <li><a href="{{ route('rollstocks.stock.index') }}" ><span>Stock Balance</span></a></li>
             </ul>
           </div>
         </li>
         @endpermission
         <!--
-        <li><a href="panels.html" class=""><i class="lnr lnr-cog"></i> <span>Panels</span></a></li>
         <li><a href="notifications.html" class=""><i class="lnr lnr-alarm"></i> <span>Notifications</span></a></li>
         <li>
           <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Pages</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>

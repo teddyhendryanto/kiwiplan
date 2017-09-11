@@ -17,9 +17,18 @@ class RollStockController extends Controller
 
   public function submit(Request $request)
   {
+    $report_by = $request->report_by;
 
-    $init = DB::connection('mysql_kiwidb')->statement("select zstkat ( '".$request->date." 00:00:00' )");
-    if($init){
+    if($report_by =='detail'){
+      $init = DB::connection('mysql_kiwidb')->statement("select zstkat ( '".$request->date." 00:00:00' )");
+
+      if(!$init){
+        $output = array(
+          'message' => 'Create Temporary Table Failed.',
+          'status' => false
+        );
+        return response()->json($output);
+      }
       $query = DB::connection('mysql_kiwidb')->table("ZSTKAT")
                   ->select('ZSTKAT.*',
                   DB::raw('datediff(current_date(),ZSTKAT.received_js) as roll_aging'),
@@ -29,14 +38,26 @@ class RollStockController extends Controller
       $datatables = Datatables::of($query);
 
       return $datatables->make(true);
-
-      $rollreceive1 = DB::connection('mysql_kiwidb')->table("ZSTKBYPA")->get();
-      foreach ($rollreceive1 as $data) {
-        echo $data->paper_type." -- ".$data->paper_code." -- ".$data->supplier_name." -- ".$data->width." -- ".$data->sum_weight." -- ".$data->count_roll."<br/>";
-      }
     }
     else{
-      dd('2');
+      $init = DB::connection('mysql_kiwidb')->statement("select zstkbypa ( '".$request->date." 00:00:00' )");
+
+      if(!$init){
+        $output = array(
+          'message' => 'Create Temporary Table Failed.',
+          'status' => false
+        );
+        return response()->json($output);
+      }
+
+      $query = DB::connection('mysql_kiwidb')->table("ZSTKBYPA")
+                  ->select('ZSTKBYPA.*',
+                  DB::raw('(@cnt := @cnt + 1) as rownum'))
+                  ->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy"))
+                  ->get();
+      $datatables = Datatables::of($query);
+
+      return $datatables->make(true);
     }
 
   }

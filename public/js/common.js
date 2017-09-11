@@ -13,7 +13,7 @@ $(document).ready(function() {
 			$('body').removeClass('layout-default'); // also remove default behaviour if set
 		}
 
-		$(this).find('.lnr').toggleClass('lnr-arrow-left-circle lnr-arrow-right-circle');
+		// $(this).find('.lnr').toggleClass('lnr-arrow-left-circle lnr-arrow-right-circle');
 
 		if($(window).innerWidth() < 1025) {
 			if(!$('body').hasClass('offcanvas-active')) {
@@ -65,6 +65,10 @@ $(document).ready(function() {
 		});
 	}
 
+	$('.notifications-scroll').slimScroll({
+		height: '250px',
+		wheelStep: 5,
+	});
 
 	/*-----------------------------------/
 	/*	PANEL FUNCTIONS
@@ -203,6 +207,7 @@ $(document).ready(function() {
 			toastr['info']($message);
 		});
 	}
+	
 });
 
 // toggle function
@@ -274,4 +279,13 @@ function getCurrentDateTime()
 	var strDate = currentYear.toString()+currentMonth.toString()+currentDate.toString();
   var strTime = hours.toString() + minutes.toString() + seconds.toString();
   return (strDate + '_' + strTime);
+}
+
+function markAsRead(notification_id){
+  $.get('/markAsRead/'+notification_id);
+}
+
+function markAllAsRead(){
+  $.get('/markAllAsRead');
+  location.reload();
 }

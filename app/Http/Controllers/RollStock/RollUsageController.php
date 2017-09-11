@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 
-use App\RollUsage;
+use App\Models\RollUsage;
 use DB;
 
 class RollUsageController extends Controller

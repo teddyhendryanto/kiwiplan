@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GeneralTrait;
 
-use App\User;
-use App\Role;
-use App\Permission;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
 
 use Auth;
 
@@ -54,10 +54,10 @@ class UserController extends Controller
 
     public function store(Request $request){
       $this->validate($request, array(
-        'username' => 'required|min:5|max:5',
-        'name' => 'required|min:3',
+        'username' => 'required|string|min:5|max:5|unique:users',
+        'name' => 'required|string|min:3|max:255',
         'email' => 'sometimes|required|email',
-        'password' => 'required|min:3',
+        'password' => 'required|string|min:4',
         'role' => 'required',
       ));
 
@@ -96,7 +96,7 @@ class UserController extends Controller
     public function update(Request $request, $id){
       // dd($request);
       $this->validate($request, array(
-        'name' => 'required|min:3',
+        'name' => 'required|string|min:3|max:255',
         'email' => 'sometimes|required|email',
         'role' => 'required',
       ));

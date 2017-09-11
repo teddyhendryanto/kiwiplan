@@ -4,14 +4,16 @@
   </div>
   <div class="container-fluid">
     <div class="navbar-btn">
-      <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
+      <button type="button" class="btn-toggle-fullwidth">
+        <i class="lnr lnr-menu"></i>
+      </button>
     </div>
-    <form class="navbar-form navbar-left">
+    <!--<form class="navbar-form navbar-left">
       <div class="input-group">
         <input type="text" value="" class="form-control" placeholder="Search dashboard...">
         <span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
       </div>
-    </form>
+    </form>-->
     <div class="navbar-btn navbar-btn-right">
     </div>
     <div id="navbar-menu">
@@ -29,18 +31,16 @@
             </ul>
           @else
             <ul class="dropdown-menu notifications">
-              <!-- notify content -->
-              @foreach (Auth::user()->unreadNotifications as $notification)
-                <li onclick="markAsRead('{{$notification->id}}');">
-                  @include('partials.notifications.'.snake_case(class_basename($notification->type)))
-                </li>
-              @endforeach
-              {{-- <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
-              <li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9 unfinished tasks</a></li>
-              <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Monthly report is available</a></li>
-              <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Weekly meeting in 1 hour</a></li>
-              <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li> --}}
-              <li><a href="#" class="more">See all notifications</a></li>
+              <div class="notifications-scroll">
+                <li onclick="markAllAsRead()"><a href="#" class="more">Baca Semua</a> </li>
+                @foreach (Auth::user()->unreadNotifications as $notification)
+                  <li onclick="markAsRead('{{$notification->id}}');">
+                    @include('partials.notifications.'.snake_case(class_basename($notification->type)))
+                  </li>
+                @endforeach
+                <!-- notify content -->
+                <li><a href="#" class="more">Lihat Semua</a></li>
+              </div>
             </ul>
           @endif
         </li>

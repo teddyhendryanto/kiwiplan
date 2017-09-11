@@ -26,7 +26,8 @@
   @include('partials.flash')
   <div class="row">
     <div class="col-md-12">
-      <div id="panel-info" class="panel panel-default">
+
+      <div id="panel-info" class="panel with-nav-tabs panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Stock Roll</h3>
         </div>
@@ -39,11 +40,17 @@
                 <input type="hidden" name="_method" value="PUT">
                 @endif
                 <div class="row">
-                  <div class="col-md-3">
+                  <div class="col-md-4">
                     <div class="form-group">
                       <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        {{-- <span class="input-group-addon"><i class="fa fa-calendar"></i></span> --}}
                         <input type="text" class="form-control js-datatimepicker" name="date" value="" placeholder="Tanggal Stock" required>
+                        <span class="input-group-btn">
+                          <select name="report_by" class="btn">
+                            <option value="detail" selected>Detail</option>
+                            <option value="summary">Summary</option>
+                          </select>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -61,28 +68,9 @@
             <div class="col-md-12">
               <div class="table-responsive">
                 <table id="table-dataTable" class="table table-hover table-striped" width="100%">
-                  <thead>
-                    <tr>
-                      <th class="text-center">#</th>
-                      <th class="text-center">Kode Kertas</th>
-                      <th class="text-center">Roll ID</th>
-                      <th class="text-center">Width</th>
-                      <th class="text-center">Weight</th>
-                      <th class="text-center">Diameter</th>
-                      <th class="text-center">Tgl Terima</th>
-                      <th class="text-center">Tgl Pakai</th>
-                      <th class="text-center">Aging</th>
-                    </tr>
-                  </thead>
-      	          <tbody class="tbody searchable f13"></tbody>
-                  <tfoot>
-                    <tr class="text-bold">
-                      <th colspan="4" class="w35">Total</th>
-                      <th class="w10"></th>
-                      <th class="w10"></th>
-                      <th colspan="3" class="w45"></th>
-                    </tr>
-                  </tfoot>
+                  <thead></thead>
+                  <tbody class="tbody searchable f13"></tbody>
+                  <tfoot></tfoot>
                 </table>
               </div>
             </div>
@@ -116,16 +104,13 @@
 
 @section('script')
   <script>
-
-    function reload_datatable(){
-      var _date = $('[name="date"]').val();
-
+    function detail_report(_reportBy,_date){
       var _fileName = _date.replace(/-/g, '');
 
       var exportFormat = {
         body: function ( data, row, column, node ) {
             // Strip column to make it numeric
-            return (column == 6 || column == 7) ?
+            return (column >= 6 && column <= 7) ?
                 data.replace( /[.]/g, '' ) :
                 data;
         },
@@ -142,7 +127,14 @@
         typeof i === 'number' ?
           i : 0;
       };
-
+      $('#table-dataTable tfoot').append(""
+        +'<tr class="text-bold">'
+        +'<th colspan="4" class="w35">Total</th>'
+        +'<th class="w10"></th>'
+        +'<th class="w10"></th>'
+        +'<th colspan="3" class="w45"></th>'
+        +'</tr>'
+      );
       $('#table-dataTable').DataTable({
         destroy: true,
         processing: true,
@@ -156,7 +148,7 @@
         ajax: {
           'url' : '{!! route('rollstocks.stock.submit') !!}',
           'type': 'POST',
-          'data': {_token : '{{ csrf_token() }}', date : _date},
+          'data': {_token : '{{ csrf_token() }}', report_by : _reportBy, date : _date},
         },
         columns: [
           { data: 'rownum', name: 'rownum'},
@@ -170,15 +162,15 @@
           { data: 'roll_aging', name: 'roll_aging', render: $.fn.dataTable.render.number( '.', ',', 0 ) },
         ],
         columnDefs: [
-          { className: "text-center w5", "targets": [ 0 ] },
-          { className: "text-center w5", "targets": [ 1 ] },
-          { className: "text-center w15", "targets": [ 2 ] },
-          { className: "text-center w10", "targets": [ 3 ] },
-          { className: "text-right w10", "targets": [ 4 ] },
-          { className: "text-right w10", "targets": [ 5 ] },
-          { className: "text-center w17-5", "targets": [ 6 ] },
-          { className: "text-center w17-5", "targets": [ 7 ] },
-          { className: "text-center w10", "targets": [ 8 ] },
+          { "title": "#", className: "text-center w5", "targets": [ 0 ] },
+          { "title": "Kode Kertas", className: "text-center w5", "targets": [ 1 ] },
+          { "title": "Roll ID", className: "text-center w15", "targets": [ 2 ] },
+          { "title": "Width", className: "text-center w10", "targets": [ 3 ] },
+          { "title": "Weight", className: "text-right w10", "targets": [ 4 ] },
+          { "title": "Diameter", className: "text-right w10", "targets": [ 5 ] },
+          { "title": "Tgl Terima", className: "text-center w17-5", "targets": [ 6 ] },
+          { "title": "Tgl Pakai", className: "text-center w17-5", "targets": [ 7 ] },
+          { "title": "Aging", className: "text-center w10", "targets": [ 8 ] },
         ],
         order: [[0, 'asc']],
         rowGroup: {
@@ -215,7 +207,7 @@
           {
             extend : 'excelHtml5',
             text : 'Send to Excel',
-            title: 'stocks_'+_fileName+'_'+getCurrentDateTime(),
+            title: 'stocks_details_'+_fileName+'_'+getCurrentDateTime(),
             footer: true,
             exportOptions: {
               modifier: {
@@ -254,8 +246,137 @@
           });
         },
       });
+    }
 
-      $('#result').removeClass('hide');
+    function summary_report(_reportBy,_date){
+
+      var _fileName = _date.replace(/-/g, '');
+
+      var exportFormat = {
+        body: function ( data, row, column, node ) {
+            // Strip column to make it numeric
+            return (column == 3 || column == 4) ?
+                data.replace( /[.]/g, '' ) :
+                data;
+        },
+        footer: function ( data, row, column, node ) {
+            // Strip column to make it numeric
+            return data.replace( /[.]/g, '' );
+        },
+      };
+
+      // Remove the formatting to get integer data for summation
+      var intVal = function ( i ) {
+        return typeof i === 'string' ?
+          i.replace(/[\$.]/g, '')*1 :
+        typeof i === 'number' ?
+          i : 0;
+      };
+
+      $('#table-dataTable tfoot').append(""
+        +'<tr class="text-bold">'
+        +'<th colspan="3" class="55">Total</th>'
+        +'<th class="w22-5"></th>'
+        +'<th class="w22-5"></th>'
+        +'</tr>'
+      );
+
+      $('#table-dataTable').DataTable({
+        destroy: true,
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        scrollX: true,
+        scrollY: "80vh",
+        scrollCollapse: true,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        pageLength: 100,
+        ajax: {
+          'url' : '{!! route('rollstocks.stock.submit') !!}',
+          'type': 'POST',
+          'data': {_token : '{{ csrf_token() }}', report_by : _reportBy, date : _date},
+        },
+        columns: [
+          { data: 'rownum', name: 'rownum'},
+          { data: 'paper_code', name: 'paper_code' },
+          { data: 'width', name: 'width' },
+          { data: 'sum_weight', name: 'sum_weight', render: $.fn.dataTable.render.number( '.', ',', 0 ) },
+          { data: 'count_roll', name: 'count_roll', render: $.fn.dataTable.render.number( '.', ',', 0 ) },
+        ],
+        columnDefs: [
+          { "title": "#", className: "text-center w10", "targets": [ 0 ] },
+          { "title": "Kode Kertas", className: "text-center w22-5", "targets": [ 1 ] },
+          { "title": "Width", className: "text-center w22-5", "targets": [ 2 ] },
+          { "title": "Weight", className: "text-right w22-5", "targets": [ 3 ] },
+          { "title": "Jumlah Roll", className: "text-right w22-5", "targets": [ 4 ] },
+        ],
+        dom: 'lBfrtip',
+        buttons: [
+          // EXCEL BUTTON
+          {
+            extend : 'excelHtml5',
+            text : 'Send to Excel',
+            title: 'stocks_summary_'+_fileName+'_'+getCurrentDateTime(),
+            footer: true,
+            exportOptions: {
+              modifier: {
+                  search: 'applied',
+                  order: 'applied'
+              },
+              format: exportFormat,
+            }
+          }
+        ],
+        footerCallback: function ( row, data, start, end, display ) {
+          var api = this.api(), data;
+          var sumColumns = [3,4]
+
+          sumColumns.forEach(function(colIndex){
+            // Total over all pages
+            var total = api
+                .column(colIndex)
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            // Total over this page
+            var pageTotal = api
+                .column(colIndex, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            // Update footer
+            $( api.column(colIndex).footer() ).html(
+                number_format(total,0,',','.')
+            );
+          });
+        },
+      });
+
+    }
+
+    function reload_datatable(){
+      var _reportBy = $('[name="report_by"]').val();
+      var _date = $('[name="date"]').val();
+
+      if(_date == ""){
+        $('[name="date"]').focus();
+      }
+      else{
+        if(_reportBy == "detail"){
+          detail_report(_reportBy,_date);
+        }
+        else{
+          console.log('2');
+          summary_report(_reportBy,_date);
+        }
+
+        $('#result').removeClass('hide');
+      }
+
     }
 
     $(document).ready(function(){
