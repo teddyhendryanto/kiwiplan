@@ -22,7 +22,7 @@ class CreatePurchaseOrdersTable extends Migration
           $table->string('po_num');
           $table->string('po_num_ex')->nullable();
           $table->datetime('po_date');
-          $table->decimal('po_qty',7,2);
+          $table->float('po_qty');
           $table->string('due_date');
           $table->string('contact_person')->nullable();
           $table->integer('term');

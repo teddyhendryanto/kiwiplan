@@ -11,4 +11,16 @@ trait GeneralTrait {
     return $string;
   }
 
+  public function emptyStringToDash($string){
+    if(trim($string) === ''){
+      $string = '---';
+    }
+    return $string;
+  }
+
+  public function fixWidthWords($string, $size){
+    $string = str_pad(trim($string), $size);
+    return $string;
+  }
+
 }

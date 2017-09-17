@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePurchaseOrderDetailsTable extends Migration
+class CreateEdiExportHistoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,13 @@ class CreatePurchaseOrderDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('purchase_order_details', function (Blueprint $table) {
+        Schema::create('edi_export_histories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('purchase_order_id')->unsigned();
-            $table->string('paper_quality');
-            $table->string('paper_gramatures');
-            $table->string('paper_width')->nullable();
-            $table->float('paper_qty')->nullable();
-            $table->string('um')->nullable();
-            $table->float('paper_price')->nullable();
-            $table->string('tax');
+            $table->integer('edi_export_id')->unsigned();
+            $table->string('edi_status');
             $table->string('remarks')->nullable();
             $table->string('rstatus',2)->default('NW');
-            $table->string('created_by');
+            $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->string('deleted_by')->nullable();
             $table->timestamps();
@@ -40,6 +34,6 @@ class CreatePurchaseOrderDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchase_order_details');
+        Schema::dropIfExists('edi_export_histories');
     }
 }

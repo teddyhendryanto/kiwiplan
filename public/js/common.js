@@ -207,7 +207,7 @@ $(document).ready(function() {
 			toastr['info']($message);
 		});
 	}
-	
+
 });
 
 // toggle function
@@ -280,6 +280,23 @@ function getCurrentDateTime()
   var strTime = hours.toString() + minutes.toString() + seconds.toString();
   return (strDate + '_' + strTime);
 }
+
+// add zero value infront
+function pad (str, max) {
+  str = str.toString();
+  return str.length < max ? pad("0" + str, max) : str;
+}
+
+// filter
+(function ($) {
+  $('#filter').keyup(function () {
+    var rex = new RegExp($(this).val(), 'i');
+    $('.searchable tr').hide();
+    $('.searchable tr').filter(function () {
+      return rex.test($(this).text());
+    }).show();
+  })
+}(jQuery));
 
 function markAsRead(notification_id){
   $.get('/markAsRead/'+notification_id);

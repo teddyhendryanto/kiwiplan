@@ -12,7 +12,7 @@ class PaperSupplier extends Model
   protected $dates = ['deleted_at'];
 
   public function keys(){
-    return $this->hasMany('App\Models\PaperKey');
+    return $this->hasMany('App\Models\PaperKey','supplier_id','id');
   }
 
   public function purchase_orders(){

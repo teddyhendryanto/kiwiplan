@@ -66,6 +66,7 @@
           </a>
           <div id="rollstock" class="collapse ">
             <ul class="nav">
+              @role(array('superuser','rollstock-spv'))
               <li>
                 <a href="#rollstock-setup" data-toggle="collapse" class="collapsed">
                   <span>Setup<span>
@@ -81,9 +82,35 @@
                   </ul>
                 </div>
               </li>
-              <li><a href="{{ route('rollstocks.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
-              <li><a href="{{ route('rollstocks.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li>
-              <li><a href="{{ route('rollstocks.stock.index') }}" ><span>Stock Balance</span></a></li>
+              @endrole
+              <li>
+                <a href="#rollstock-paperroll" data-toggle="collapse" class="collapsed">
+                  <span>Paper Roll<span>
+                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                </a>
+                <div id="rollstock-paperroll" class="collapse ">
+                  <ul class="nav">
+                    <li><a href="{{ route('receiveroll.index') }}"><span>Penerimaan Roll</span></a></li>
+                    @role(array('superuser','rollstock-spv'))
+                    <li><a href="{{ route('verifyroll.index') }}"><span>Verifikasi Roll</span></a></li>
+                    <li><a href="{{ route('edi.index') }}"><span>Export EDI</span></a></li>
+                    @endrole
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a href="#rollstock-reports" data-toggle="collapse" class="collapsed">
+                  <span>Report<span>
+                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                </a>
+                <div id="rollstock-reports" class="collapse ">
+                  <ul class="nav">
+                    <li><a href="{{ route('rollstocks.rollreceive.index') }}" ><span>Penerimaan Roll</span></a></li>
+                    <li><a href="{{ route('rollstocks.rollusage.index') }}" ><span>Pemakaian Roll</span></a></li>
+                    <li><a href="{{ route('rollstocks.stock.index') }}" ><span>Stock Balance</span></a></li>
+                  </ul>
+                </div>
+              </li>
             </ul>
           </div>
         </li>

@@ -46,7 +46,7 @@
                         {{-- <span class="input-group-addon"><i class="fa fa-calendar"></i></span> --}}
                         <input type="text" class="form-control js-datatimepicker" name="date" value="" placeholder="Tanggal Stock" required>
                         <span class="input-group-btn">
-                          <select name="report_by" class="btn">
+                          <select name="report_by" class="btn btn-default">
                             <option value="detail" selected>Detail</option>
                             <option value="summary">Summary</option>
                           </select>

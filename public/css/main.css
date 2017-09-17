@@ -60,10 +60,13 @@ footer {
 .text-bold{
   font-weight: bold;
 }
-
+.text-lowercase{
+  text-transform: lowercase !important;
+}
 .input-group-btn select {
   padding-left: 5px;
   padding-right: 5px;
+  height: 34px;
 }
 
 /*
@@ -153,49 +156,49 @@ footer {
   width: 20% !important;
 }
 .w25{
-  width: 25%;
+  width: 25% !important;
 }
 .w30{
-  width: 30%;
+  width: 30% !important;
 }
 .w40{
-  width: 40%;
+  width: 40% !important;
 }
 .w45{
-  width: 45%;
+  width: 45% !important;
 }
 .w50{
-  width: 50%;
+  width: 50% !important;
 }
 .w55{
-  width: 55%;
+  width: 55% !important;
 }
 .w60{
-  width: 60%;
+  width: 60% !important;
 }
 .w65{
-  width: 65%;
+  width: 65% !important;
 }
 .w70{
-  width: 70%;
+  width: 70% !important;
 }
 .w75{
-  width: 75%;
+  width: 75% !important;
 }
 .w80{
-  width: 80%;
+  width: 80% !important;
 }
 .w85{
-  width: 85%;
+  width: 85% !important;
 }
 .w90{
-  width: 90%;
+  width: 90% !important;
 }
 .w95{
-  width: 95%;
+  width: 95% !important;
 }
 .w100{
-  width:100%;
+  width:100% !important;
 }
 /*
  * ------------------------------------------------------------------------------------------------
@@ -322,7 +325,13 @@ footer {
 #table-with-inputs > tbody > tr > td:first-child,
 #table-with-inputs > tbody > tr > th:first-child,
 #table-with-inputs > tfoot > tr > td:first-child,
-#table-with-inputs > tfoot > tr > th:first-child {
+#table-with-inputs > tfoot > tr > th:first-child,
+#table-history > thead > tr > td:first-child,
+#table-history > thead > tr > th:first-child,
+#table-history > tbody > tr > td:first-child,
+#table-history > tbody > tr > th:first-child,
+#table-history > tfoot > tr > td:first-child,
+#table-history > tfoot > tr > th:first-child {
   padding-left: 8px;
 }
 
@@ -331,8 +340,19 @@ footer {
 #table-with-inputs > tbody > tr > td:last-child,
 #table-with-inputs > tbody > tr > th:last-child,
 #table-with-inputs > tfoot > tr > td:last-child,
-#table-with-inputs > tfoot > tr > th:last-child {
+#table-with-inputs > tfoot > tr > th:last-child,
+#table-history > thead > tr > td:last-child,
+#table-history > thead > tr > th:last-child,
+#table-history > tbody > tr > td:last-child,
+#table-history > tbody > tr > th:last-child,
+#table-history > tfoot > tr > td:last-child,
+#table-history > tfoot > tr > th:last-child  {
   padding-left: 0;
+}
+
+#table-history{
+  text-transform: uppercase;
+  vertical-align: middle !important;
 }
 /********************
  * Select2
@@ -352,7 +372,7 @@ footer {
 }
 .select2-selection{
   border: solid 1px #ccc !important;
-  height: 34px !important;
+  min-height: 34px;
 }
 .select2-container--default.select2-container--focus .select2-selection--multiple {
   border: solid 1px #66afe9 !important;
@@ -897,7 +917,7 @@ ul.list-justify > li {
  ********************/
 .form-control {
   border-radius: 2px;
-  text-transform: uppercase !important;
+  text-transform: uppercase;
 }
 /*.form-control {
   -moz-box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.1);
@@ -1159,6 +1179,14 @@ fieldset[disabled] .btn {
 .panel .table > tfoot > tr > th:first-child {
   padding-left: 25px;
 }
+.panel .table > thead > tr > td,
+.panel .table > thead > tr > th,
+.panel .table > tbody > tr > td,
+.panel .table > tbody > tr > th,
+.panel .table > tfoot > tr > td,
+.panel .table > tfoot > tr > th {
+  vertical-align: middle;
+}
 .panel .table > thead > tr > td:last-child,
 .panel .table > thead > tr > th:last-child,
 .panel .table > tbody > tr > td:last-child,
@@ -1166,6 +1194,18 @@ fieldset[disabled] .btn {
 .panel .table > tfoot > tr > td:last-child,
 .panel .table > tfoot > tr > th:last-child {
   padding-left: 25px;
+}
+
+.panel .table > tbody > .subtotal{
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  font-weight: bold;
+  background: #e7e7e7;
+}
+
+.panel .table > tfoot > .grandtotal{
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .panel-footer {
@@ -1589,7 +1629,7 @@ ul.activity-list > li {
 }
 @media screen and (max-width: 1279px) {
   .auth-box {
-    width: 90%;
+    width: 46%%;
   }
   .auth-box .left {
     top: 3.3em;

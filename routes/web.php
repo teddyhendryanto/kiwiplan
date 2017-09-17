@@ -13,13 +13,12 @@
 
 Auth::routes();
 
-Route::group(['middleware' => ['auth','web']], function(){
+Route::group(['middleware' => ['auth']], function(){
   Route::get('/', 'HomeController@index')->name('home');
   Route::get('/home', 'HomeController@index')->name('home');
 
   Route::get('/markAsRead/{notification_id}','NotificationController@markAsRead')->name('notifications.markAsRead');
   Route::get('/markAllAsRead','NotificationController@markAllAsRead')->name('notifications.markAllAsRead');
-
 
   // Setup
   Route::prefix('setups')->group(function(){
@@ -98,7 +97,31 @@ Route::group(['middleware' => ['auth','web']], function(){
       Route::post('keys_datatable','RollStock\PaperKeyController@getKeyListDatatable')->name('keys.ajax.getKeyListDatatable');
     });
 
-    Route::prefix('setup')->group(function(){
+    Route::prefix('receiving')->group(function(){
+      Route::resource('receiveroll','RollStock\ReceiveRollController',['only' => ['index','create','store','edit','update','destroy']]);
+      Route::get('receiveroll/delete/{id}','RollStock\ReceiveRollController@delete')->name('receiveroll.delete');
+      Route::get('receiveroll/editCustom','RollStock\ReceiveRollController@editCustom')->name('receiveroll.edit.custom');
+      Route::post('receiveroll/getPODetail','RollStock\ReceiveRollController@getPODetail')->name('receiveroll.ajax.getPODetail');
+      Route::post('receiveroll/getRollID/fox','RollStock\ReceiveRollController@getFoxRollID')->name('receiveroll.ajax.getFoxRollID');
+      Route::post('receiveroll/showHistory','RollStock\ReceiveRollController@showHistory')->name('receiveroll.showHistory');
+      Route::post('receiveroll/showHistory/custom','RollStock\ReceiveRollController@showHistoryCustom')->name('receiveroll.showHistory.custom');
+    });
+
+    Route::prefix('verification')->group(function(){
+      Route::resource('verifyroll','RollStock\VerifyRollController',['only' => ['index', 'create', 'store']]);
+      Route::get('verifyroll/delete/{id}','RollStock\VerifyRollController@delete')->name('verifyroll.delete');
+      Route::post('verifyroll/showHistory','RollStock\VerifyRollController@showHistory')->name('verifyroll.showHistory');
+      Route::post('verifyroll/showVerification','RollStock\VerifyRollController@showVerification')->name('verifyroll.showVerification');
+    });
+
+    Route::prefix('export')->group(function(){
+      Route::resource('edi','RollStock\EdiExportController',['only' => ['index', 'show']]);
+      Route::get('edi/export_process/{exec_type}','RollStock\EdiExportController@export_process')->name('edi.export_process');
+      Route::post('edi/showHistory','RollStock\EdiExportController@showHistory')->name('edi.showHistory');
+      Route::post('edi/showHistory/byUniqueRollId','RollStock\EdiExportController@showHistoryByUniqueRollId')->name('edi.showHistory.byUniqueRollId');
+    });
+
+    Route::prefix('reports')->group(function(){
       Route::get('rollreceive/{type?}/{value?}','RollStock\RollReceiveController@index')->name('rollstocks.rollreceive.index');
       Route::post('rollreceive','RollStock\RollReceiveController@submit')->name('rollstocks.rollreceive.submit');
 
@@ -109,6 +132,6 @@ Route::group(['middleware' => ['auth','web']], function(){
       Route::post('stock','RollStock\RollStockController@submit')->name('rollstocks.stock.submit');
     });
 
-    
+
   });
 });

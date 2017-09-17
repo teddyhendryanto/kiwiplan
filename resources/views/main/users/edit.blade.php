@@ -42,7 +42,7 @@
                   <div class="col-md-6">
                     <label for="username">Username <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="username" name="username" class="form-control" required
+                      <input type="text" id="username" name="username" class="form-control text-lowercase" required
                       value="{{ $data->username }}" disabled>
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                   <div class="col-md-6">
                     <label for="email">Email <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="email" id="email" name="email" class="form-control"
+                      <input type="email" id="email" name="email" class="form-control text-lowercase"
                       value="{{ $data->email }}">
                     </div>
                   </div>
@@ -69,7 +69,7 @@
                   <div class="col-md-6">
                     <label for="password">Password <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="password" id="password" name="password" class="form-control"
+                      <input type="password" id="password" name="password" class="form-control text-lowercase"
                       value="{{ $data->password }}" autocomplete="off" disabled>
                     </div>
                   </div>
