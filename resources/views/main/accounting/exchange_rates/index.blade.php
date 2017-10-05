@@ -48,7 +48,12 @@
                     <input type="hidden" name="date_to" value="">
                     <input type="hidden" name="count_days" value="">
                   </div>
-                  <div class="col-md-3 col-md-offset-6">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="button" class="btn btn-default" name="submit" value="Submit">
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-md-offset-3">
                     <a href="{{ route('exchange_rates.create') }}" class="btn btn-success pull-right">
                       Buat Baru
                     </a>
@@ -80,7 +85,7 @@
   <!-- Parsley JS -->
   <script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Date Range Picker -->
   <script src="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
   <!-- DataTables -->

@@ -5,7 +5,7 @@
   <div class="container-fluid">
     <div class="navbar-btn">
       <button type="button" class="btn-toggle-fullwidth">
-        <i class="lnr lnr-menu"></i>
+        <i class="fa fa-bars"></i>
       </button>
     </div>
     <!--<form class="navbar-form navbar-left">
@@ -20,7 +20,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-            <i class="lnr lnr-alarm"></i>
+            <i class="fa fa-bell"></i>
             @if (count(Auth::user()->unreadNotifications))
               <span class="badge bg-danger">{{ count(Auth::user()->unreadNotifications) }}</span>
             @endif
@@ -32,21 +32,23 @@
           @else
             <ul class="dropdown-menu notifications">
               <div class="notifications-scroll">
-                <li onclick="markAllAsRead()"><a href="#" class="more">Baca Semua</a> </li>
+                <li onclick="markAllAsRead()">
+                  <a href="#" class="more">Baca Semua</a>
+                </li>
                 @foreach (Auth::user()->unreadNotifications as $notification)
                   <li onclick="markAsRead('{{$notification->id}}');">
                     @include('partials.notifications.'.snake_case(class_basename($notification->type)))
                   </li>
                 @endforeach
                 <!-- notify content -->
-                <li><a href="#" class="more">Lihat Semua</a></li>
+                <li><a href="{{ route('notif.index','unread') }}" class="more">Lihat Semua</a></li>
               </div>
             </ul>
           @endif
         </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <span>{{ Auth::user()->name }}</span> <i class="icon-submenu lnr lnr-chevron-down"></i>
+            <span>{{ Auth::user()->name }}</span> <i class="icon-submenu fa fa-angle-down"></i>
           </a>
           <ul class="dropdown-menu">
             <li>

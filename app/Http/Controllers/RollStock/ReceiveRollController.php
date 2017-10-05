@@ -22,6 +22,10 @@ class ReceiveRollController extends Controller
 {
     use GeneralTrait;
 
+    public function __construct(){
+      $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -193,6 +197,9 @@ class ReceiveRollController extends Controller
 
       // search paper price
       $search_paper_price = PurchaseOrderDetail::select(DB::raw('ifnull(paper_price,1) as paper_price'))
+                              ->leftJoin('purchase_orders','purchase_orders.id','purchase_order_details.purchase_order_id')
+                              ->where('purchase_orders.site_id',$site_id)
+                              ->where('purchase_orders.po_num',$po_num)
                               ->where('paper_quality',substr($paper_key,2,2))
                               ->where('paper_gramatures','like','%'.substr($paper_key,4,3).'%')
                               ->first();
@@ -260,7 +267,11 @@ class ReceiveRollController extends Controller
     }
 
     public function getDetails($site_id, $date_from, $date_to, $rstatus = null, $supplier_id = null){
-      $query = ReceiveRoll::with('supplier','verify_roll')
+      $query = ReceiveRoll::with('verify_roll')
+                          ->select([
+                            'receive_rolls.*',
+                            'paper_suppliers.short_name'])
+                          ->leftJoin('paper_suppliers','paper_suppliers.id','receive_rolls.supplier_id')
                           ->where('site_id',$site_id)
                           ->where('receive_date','>=',$date_from)
                           ->where('receive_date','<=',$date_to);
@@ -271,12 +282,14 @@ class ReceiveRollController extends Controller
         $query->where('supplier_id',$supplier_id);
       }
 
-      return $query->orderBy('po_num')->get();
+      return $query->orderBy('po_num','asc')
+                   ->orderBy('doc_ref','asc')
+                   ->orderBy('unique_roll_id','asc')
+                   ->get();
     }
 
     public function getSummary($site_id, $date_from, $date_to, $rstatus = null, $supplier_id = null){
-      $query = ReceiveRoll::with('supplier','verify_roll')
-                          ->select([
+      $query = ReceiveRoll::select([
                             'site_id', 'po_num', 'doc_ref', DB::raw('sum(roll_weight) as roll_weight')
                           ])
                           ->where('site_id',$site_id)
@@ -290,7 +303,8 @@ class ReceiveRollController extends Controller
       }
 
       return $query->groupBy('site_id', 'po_num', 'doc_ref')
-                   ->orderBy('po_num')->get();
+                   ->orderBy('po_num','asc')
+                   ->orderBy('doc_ref','asc')->get();
     }
 
     public function showHistory(Request $request){
@@ -301,9 +315,9 @@ class ReceiveRollController extends Controller
       $date_to = $request->date_to;
 
       $details = $this->getDetails($site_id, $date_from, $date_to, $rstatus, $supplier_id);
-      $summary = $this->getSummary($site_id, $date_from, $date_to, $rstatus, $supplier_id);
+      // $summary = $this->getSummary($site_id, $date_from, $date_to, $rstatus, $supplier_id);
 
-      if(count($details) > 0 && count($summary) > 0){
+      if(count($details) > 0){
         $sites = Site::all();
         $suppliers = PaperSupplier::all();
         return view('main.rollstock.receiveroll.index')
@@ -311,8 +325,7 @@ class ReceiveRollController extends Controller
                 ->withSuppliers($suppliers)
                 ->withDateFrom($date_from)
                 ->withDateTo($date_to)
-                ->withDetails($details)
-                ->withSummary($summary);
+                ->withDetails($details);
       }
       else{
         return redirect()->back()->with('status-danger','Data tidak ditemukan.');
@@ -346,7 +359,6 @@ class ReceiveRollController extends Controller
                             'verify_roll.edi_export_details.edi_export',
                           ])
                           ->findOrFail($id);
-
                           // dd($data);
 
       // dd($data);
@@ -367,6 +379,7 @@ class ReceiveRollController extends Controller
     {
       $user = Auth::user();
 
+      $site_id = $request->site_id;
       $receive_date = $request->receive_date;
       $po_id = $request->po_id;
       $po_num = strtoupper($request->po_num);
@@ -399,6 +412,9 @@ class ReceiveRollController extends Controller
 
       // search paper price
       $search_paper_price = PurchaseOrderDetail::select(DB::raw('ifnull(paper_price,1) as paper_price'))
+                              ->leftJoin('purchase_orders','purchase_orders.id','purchase_order_details.purchase_order_id')
+                              ->where('purchase_orders.site_id',$site_id)
+                              ->where('purchase_orders.po_num',$po_num)
                               ->where('paper_quality',substr($paper_key,2,2))
                               ->where('paper_gramatures','like','%'.substr($paper_key,4,3).'%')
                               ->first();
@@ -449,16 +465,17 @@ class ReceiveRollController extends Controller
       $rcv->remarks = $remarks;
       $rcv->rate_date = $rate_date;
       $rcv->selling_rate = $selling_rate;
+      $rcv->verify = false;
       $rcv->rstatus = 'AM';
       $rcv->updated_by = $user->username;
       $rcv->save();
 
-      // update verification datetime
+      // delete verification
       $verify = VerifyRoll::where('receive_roll_id', $id)->first();
       if(!is_null($verify)){
-        $verify->exported = false;
-        $verify->rstatus = 'AM';
-        $verify->updated_by = $user->username;
+        $verify->rstatus = 'DL';
+        $verify->deleted_by = $user->username;
+        $verify->deleted_at = Carbon::now();
         $verify->save();
       }
 
@@ -515,13 +532,16 @@ class ReceiveRollController extends Controller
 
       if($search_by == 'unique_roll_id'){
         $filter = $request->unique_roll_id;
-        $data = ReceiveRoll::with('supplier','verify_roll')->where('unique_roll_id',$request->unique_roll_id)->get();
+        $data = ReceiveRoll::with('supplier')->where('unique_roll_id',$filter)->get();
+      }
+      elseif($search_by == 'supplier_roll_id'){
+        $filter = $request->supplier_roll_id;
+        $data = ReceiveRoll::with('supplier')->where('supplier_roll_id',$filter)->get();
       }
       else{
         $filter = $request->doc_ref;
-        $data = ReceiveRoll::with('supplier','verify_roll')->where('doc_ref',$request->doc_ref)->get();
+        $data = ReceiveRoll::with('supplier')->where('doc_ref',$filter)->get();
       }
-      // dd($data);
 
       if(count($data) > 0){
         return view('main.rollstock.receiveroll.edit-custom')

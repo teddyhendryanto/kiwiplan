@@ -97,7 +97,7 @@
   <!-- Parsley JS -->
   <script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Date Range Picker -->
   <script src="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
   <!-- DataTables -->

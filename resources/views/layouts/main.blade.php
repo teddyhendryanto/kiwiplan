@@ -9,7 +9,6 @@
 	<!-- VENDOR CSS -->
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('vendor/linearicons/style.css') }}">
 	<!-- MAIN CSS -->
 	<link rel="stylesheet" href="{{ asset('css/main.css') }}">
 

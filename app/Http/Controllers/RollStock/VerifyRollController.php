@@ -49,9 +49,8 @@ class VerifyRollController extends Controller
 
       // get receive history from ReceiveRollController
       $details = (new ReceiveRollController)->getDetails($site_id, $date_from, $date_to, $rstatus, $supplier_id);
-      $summary = (new ReceiveRollController)->getSummary($site_id, $date_from, $date_to, $rstatus, $supplier_id);
 
-      if(count($details) > 0 && count($summary) > 0){
+      if(count($details) > 0){
         $sites = Site::all();
         $suppliers = PaperSupplier::all();
         return view('main.rollstock.verifyroll.create')
@@ -59,8 +58,7 @@ class VerifyRollController extends Controller
                 ->withSuppliers($suppliers)
                 ->withDateFrom($date_from)
                 ->withDateTo($date_to)
-                ->withDetails($details)
-                ->withSummary($summary);
+                ->withDetails($details);
       }
       else{
         return redirect()->back()->with('status-danger','Data tidak ditemukan.');
@@ -80,6 +78,8 @@ class VerifyRollController extends Controller
                           ->where('receive_rolls.rstatus','<>','DL')
                           ->where('verify_rolls.rstatus','<>','DL')
                           ->orderBy('receive_rolls.po_num')
+                          ->orderBy('receive_rolls.doc_ref')
+                          ->orderBy('receive_rolls.unique_roll_id')
                           ->get();
 
       return $result;
@@ -96,7 +96,8 @@ class VerifyRollController extends Controller
                           ->where('receive_rolls.rstatus','<>','DL')
                           ->where('verify_rolls.rstatus','<>','DL')
                           ->groupBy('receive_rolls.site_id', 'receive_rolls.po_num', 'receive_rolls.doc_ref')
-                          ->orderBy('receive_rolls.po_num')
+                          ->orderBy('receive_rolls.po_num','asc')
+                          ->orderBy('receive_rolls.doc_ref','asc')
                           ->get();
 
       return $result;
@@ -107,14 +108,12 @@ class VerifyRollController extends Controller
       $date_to = $request->date_to;
 
       $details = $this->getDetails($date_from, $date_to);
-      $summary = $this->getSummary($date_from, $date_to);
 
-      if(count($details) > 0 && count($summary) > 0){
+      if(count($details) > 0){
         return view('main.rollstock.verifyroll.index')
                 ->withDateFrom($date_from)
                 ->withDateTo($date_to)
-                ->withDetails($details)
-                ->withSummary($summary);
+                ->withDetails($details);
       }
       else{
         return redirect()->back()->with('status-danger','Data tidak ditemukan.');
@@ -157,6 +156,11 @@ class VerifyRollController extends Controller
         $verify->verify_date = date('Y-m-d');
         $verify->created_by = $user->username;
         $verify->save();
+
+        // update verify status in receive_rolls table
+        $receive = ReceiveRoll::findOrFail($receive_id);
+        $receive->verify = true;
+        $receive->save();
       }
 
       return redirect()->route('verifyroll.create')->with('status-success','Verifikasi roll berhasil.');
@@ -173,6 +177,11 @@ class VerifyRollController extends Controller
       $verify->save();
 
       if($verify){
+        // update verify status in receive_rolls table
+        $receive = ReceiveRoll::findOrFail($verify->receive_roll_id);
+        $receive->verify = false;
+        $receive->save();
+
         echo "
           <script>
             alert('Verifikasi roll berhasil dihapus.');
@@ -188,6 +197,43 @@ class VerifyRollController extends Controller
           </script>
         ";
       }
+    }
+
+    public function unverified(){
+      $details = ReceiveRoll::whereNotIn(
+        'id', [DB::raw("(select distinct receive_roll_id from verify_rolls where rstatus <> 'DL')")]
+        )
+        ->where('rstatus','<>','DL')
+        ->orderBy('po_num','asc')
+        ->orderBy('doc_ref','asc')
+        ->orderBy('unique_roll_id','asc')
+        ->get();
+      return view('main.rollstock.verifyroll.show')->withDetails($details);
+    }
+
+    public function unverified_store(Request $request){
+      $user = Auth::user();
+
+      if(!isset($request->cb)){
+        return redirect()->route('verifyroll.unverified')->with('status-danger','Verifikasi roll gagal.');
+      }
+
+      for ($i=0; $i < count($request->cb) ; $i++) {
+        $receive_id = $request->cb[$i];
+
+        $verify = new VerifyRoll;
+        $verify->receive_roll_id = $receive_id;
+        $verify->verify_date = date('Y-m-d');
+        $verify->created_by = $user->username;
+        $verify->save();
+
+        // update verify status in receive_rolls table
+        $receive = ReceiveRoll::findOrFail($receive_id);
+        $receive->verify = true;
+        $receive->save();
+      }
+
+      return redirect()->back()->with('status-success','Verifikasi roll berhasil.');
     }
 
 }

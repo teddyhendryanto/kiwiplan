@@ -60,8 +60,7 @@
                         <th class="text-center w12-5">Unique <br/> Roll ID</th>
                         <th class="text-center w12-5">Supplier <br/>Roll ID</th>
                         <th class="text-center w10">Doc Ref <br/> Nopol</th>
-                        <th class="text-center w10">Tgl <br/> Verifikasi</th>
-                        <th class="text-center w5"></th>
+                        <th class="text-center w15">Tgl <br/> Verifikasi</th>
                       </tr>
                     </thead>
         	          <tbody class="tbody searchable f12">
@@ -81,12 +80,7 @@
                           <td class="text-center w12-5">{{ $detail->verify_roll->receive_roll->unique_roll_id }}</td>
                           <td class="text-center w12-5">{{ $detail->verify_roll->receive_roll->supplier_roll_id }}</td>
                           <td class="text-center w10">{{ $detail->verify_roll->receive_roll->doc_ref }} <br/> {{ $detail->verify_roll->receive_roll->wagon }}</td>
-                          <td class="text-center w10">{{ date('Y-m-d', strtotime($detail->verify_roll->verify_date)) }}</td>
-                          <td class="text-center w5">
-                            <a href="{{ route('verifyroll.delete', $detail->verify_roll->id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus verifikasi ini?');">
-                              <i class="fa fa-trash"></i>
-                            </a>
-                          </td>
+                          <td class="text-center w15">{{ date('Y-m-d', strtotime($detail->verify_roll->verify_date)) }}</td>
                         </tr>
                         @php
                           $i++;

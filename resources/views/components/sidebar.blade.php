@@ -9,7 +9,7 @@
         <li>
           <a href="#setup" data-toggle="collapse" class="collapsed">
             <span>Setup</span>
-            <i class="icon-submenu lnr lnr-chevron-left"></i>
+            <i class="icon-submenu fa fa-angle-right"></i>
           </a>
           <div id="setup" class="collapse ">
             <ul class="nav">
@@ -20,7 +20,7 @@
         <li>
           <a href="#users" data-toggle="collapse" class="collapsed">
             <span>User</span>
-            <i class="icon-submenu lnr lnr-chevron-left"></i>
+            <i class="icon-submenu fa fa-angle-right"></i>
           </a>
           <div id="users" class="collapse ">
             <ul class="nav">
@@ -35,7 +35,7 @@
         <li>
           <a href="#accounting" data-toggle="collapse" class="collapsed">
             <span>Accounting</span>
-            <i class="icon-submenu lnr lnr-chevron-left"></i>
+            <i class="icon-submenu fa fa-angle-right"></i>
           </a>
           <div id="accounting" class="collapse ">
             <ul class="nav">
@@ -43,8 +43,8 @@
               <li><a href="{{ route('exchange_rates.index') }}"><span>Kurs</span></a></li>
               <li>
                 <a href="#accounting-reports" data-toggle="collapse" class="collapsed">
-                  <span>Report<span>
-                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                  <span>Report Kiwi<span>
+                  <i class="icon-submenu fa fa-angle-right"></i>
                 </a>
                 <div id="accounting-reports" class="collapse ">
                   <ul class="nav">
@@ -62,7 +62,7 @@
         <li>
           <a href="#rollstock" data-toggle="collapse" class="collapsed">
             <span>Roll Stock</span>
-            <i class="icon-submenu lnr lnr-chevron-left"></i>
+            <i class="icon-submenu fa fa-angle-right"></i>
           </a>
           <div id="rollstock" class="collapse ">
             <ul class="nav">
@@ -70,7 +70,7 @@
               <li>
                 <a href="#rollstock-setup" data-toggle="collapse" class="collapsed">
                   <span>Setup<span>
-                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                  <i class="icon-submenu fa fa-angle-right"></i>
                 </a>
                 <div id="rollstock-setup" class="collapse ">
                   <ul class="nav">
@@ -86,7 +86,7 @@
               <li>
                 <a href="#rollstock-paperroll" data-toggle="collapse" class="collapsed">
                   <span>Paper Roll<span>
-                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                  <i class="icon-submenu fa fa-angle-right"></i>
                 </a>
                 <div id="rollstock-paperroll" class="collapse ">
                   <ul class="nav">
@@ -100,8 +100,8 @@
               </li>
               <li>
                 <a href="#rollstock-reports" data-toggle="collapse" class="collapsed">
-                  <span>Report<span>
-                  <i class="icon-submenu lnr lnr-chevron-left"></i>
+                  <span>Report Kiwi<span>
+                  <i class="icon-submenu fa fa-angle-right"></i>
                 </a>
                 <div id="rollstock-reports" class="collapse ">
                   <ul class="nav">
@@ -115,10 +115,13 @@
           </div>
         </li>
         @endpermission
+        <li><a href="{{ route('notif.index','unread') }}">
+          <span>Notifikasi</span></a>
+        </li>
         <!--
         <li><a href="notifications.html" class=""><i class="lnr lnr-alarm"></i> <span>Notifications</span></a></li>
         <li>
-          <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Pages</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+          <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Pages</span> <i class="icon-submenu fa fa-angle-right"></i></a>
           <div id="subPages" class="collapse ">
             <ul class="nav">
               <li><a href="page-profile.html" class="">Profile</a></li>

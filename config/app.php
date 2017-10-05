@@ -165,6 +165,7 @@ return [
         Zizaco\Entrust\EntrustServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Yajra\Datatables\ButtonsServiceProvider::class,
+        Elibyy\TCPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -229,6 +230,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'PDF' => Elibyy\TCPDF\Facades\TCPDF::class,
 
     ],
 

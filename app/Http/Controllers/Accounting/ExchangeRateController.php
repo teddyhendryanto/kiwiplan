@@ -16,6 +16,10 @@ class ExchangeRateController extends Controller
 {
     use GeneralTrait;
 
+    public function __construct(){
+      $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +40,10 @@ class ExchangeRateController extends Controller
         DB::raw('cast(rate_date as date) as rate_date'),
         'selling_rate',
         'buying_rate',
-        ])->get();
+        ])
+        ->where('rate_date','>=',$request->date_from)
+        ->where('rate_date','<=',$request->date_to)
+        ->get();
       $datatables = Datatables::collection($rates)
                     ->addColumn('action', function ($rate) {
                       return '

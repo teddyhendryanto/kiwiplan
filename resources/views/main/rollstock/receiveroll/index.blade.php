@@ -67,7 +67,7 @@
                             Buat Baru
                           </a>
                           <a href="{{ route('receiveroll.edit.custom') }}" class="btn btn-warning">
-                            Search by Unique Roll ID / Doc Ref
+                            Search Receiving
                           </a>
                         </div>
                       </div>
@@ -110,7 +110,7 @@
             </div>
           </div>
 
-          @if(isset($details) && isset($summary))
+          @if(isset($details))
             <div class="row">
       				<div class="col-md-12">
       					<div class="page-header">
@@ -151,65 +151,60 @@
                       @php
                         $i = 1;
                         $grand_total_weight = 0;
+                        $subtotal_weight = 0;
                       @endphp
-                      @foreach ($summary as $sum)
-                        @php
-                          $sum_doc_ref = $sum->doc_ref;
-                          $sum_roll_weight = $sum->roll_weight;
-                        @endphp
-
-                        @foreach ($details as $data)
-
-                          @if ($data->doc_ref == $sum_doc_ref)
-                            @if ($data->verify_roll == null)
-                              @php
-                                $rclass = '';
-                              @endphp
+                      @foreach ($details as $key => $data)
+                        @if ($data->verify == false)
+                          @php
+                            $rclass = 'danger';
+                          @endphp
+                        @else
+                          @php
+                            $rclass = '';
+                          @endphp
+                        @endif
+                        <tr class="{{ $rclass }}">
+                          <td class="text-center w2-5">{{ $i }}.</td>
+                          <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
+                          <td class="text-center w10">{{ $data->po_num }}</td>
+                          <td class="text-center w10">{{ $data->short_name }}</td>
+                          <td class="text-center w7-5">{{ $data->paper_key }}</td>
+                          <td class="text-center w7-5">{{ $data->paper_width }}</td>
+                          <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
+                          <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
+                          <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
+                          <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
+                          <td class="text-center w10">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
+                          <td class="text-center w15">
+                            <a href="{{ route('receiveroll.edit', $data->id) }}" class="btn btn-default btn-xs" target="_blank">
+                              <i class="fa fa-pencil"></i>
+                            </a>
+                            @if ($data->verify == false)
+                              <a href="{{ route('receiveroll.delete', $data->id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus penerimaan ini?');">
+                                <i class="fa fa-trash"></i>
+                              </a>
                             @else
-                              @php
-                                $rclass = 'success';
-                              @endphp
+                              <a href="javascript:void(0)" class="btn btn-default btn-xs" target="_blank" onclick="return alert('Roll ini sudah di-verifikasi.');">
+                                <i class="fa fa-trash"></i>
+                              </a>
                             @endif
-                            <tr class="{{ $rclass }}">
-                              <td class="text-center w2-5">{{ $i }}.</td>
-                              <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
-                              <td class="text-center w10">{{ $data->po_num }}</td>
-                              <td class="text-center w10">{{ $data->supplier->short_name }}</td>
-                              <td class="text-center w7-5">{{ $data->paper_key }}</td>
-                              <td class="text-center w7-5">{{ $data->paper_width }}</td>
-                              <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
-                              <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
-                              <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
-                              <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
-                              <td class="text-center w10">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
-                              <td class="text-center w15">
-                                <a href="{{ route('receiveroll.edit', $data->id) }}" class="btn btn-default btn-xs" target="_blank">
-                                  <i class="fa fa-pencil"></i>
-                                </a>
-                                @if ($data->verify_roll == null)
-                                  <a href="{{ route('receiveroll.delete', $data->id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus penerimaan ini?');">
-                                    <i class="fa fa-trash"></i>
-                                  </a>
-                                @else
-                                  <a href="javascript:void(0)" class="btn btn-default btn-xs" target="_blank" onclick="return alert('Roll ini sudah di-verifikasi.');">
-                                    <i class="fa fa-trash"></i>
-                                  </a>
-                                @endif
-                              </td>
-                            </tr>
-                            @php
-                              $i++;
-                            @endphp
-                          @endif
-                        @endforeach
-                        <tr class="subtotal">
-                          <td colspan="6">Subtotal</td>
-                          <td class="text-right">{{ number_format($sum_roll_weight,2,'.',',') }}</td>
-                          <td colspan="5"></td>
+                          </td>
                         </tr>
                         @php
-                          $grand_total_weight+=$sum_roll_weight;
+                          $i++;
+                          $subtotal_weight += $data->roll_weight;
+                          $grand_total_weight += $data->roll_weight;
                         @endphp
+                        @if (@$details[$key+1]['doc_ref'] != $data['doc_ref'])
+                          <tr class="subtotal">
+                            <td colspan="6">Subtotal</td>
+                            <td class="text-right">{{ number_format($subtotal_weight,2,'.',',') }}</td>
+                            <td colspan="5"></td>
+                          </tr>
+                          @php
+                            $subtotal_weight = 0;
+                          @endphp
+                        @endif
                       @endforeach
         	          </tbody>
                     <tfoot>
@@ -235,7 +230,7 @@
   <!-- Parsley JS -->
   <script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Date Range Picker -->
   <script src="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 @endsection

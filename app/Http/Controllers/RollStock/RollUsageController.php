@@ -23,24 +23,22 @@ class RollUsageController extends Controller
 
     public function submit(Request $request){
 
-      // Get Detail Transaction
-      $query = DB::connection('mysql_kiwidb')->table('roll_usages')
-              ->select('roll_usages.*',
-                  DB::raw("(roll_usages.weight_before_use - roll_usages.weight_use) as weight_balance"),
-                  DB::raw('(@cnt := @cnt + 1) as rownum')
-                )
-              ->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy"));
-      if ($request->date_from != "" && $request->date_to) {
-        $query->whereDate('finish_splice_js','>=',$request->date_from)
-              ->whereDate('finish_splice_js','<=',$request->date_to);
-      }
-      else{
-        $query->whereDate('finish_splice_js','>=','2017-08-30')
-              ->whereDate('finish_splice_js','<=','2017-08-31');
-      }
-      $query->get();
+      $init = DB::connection('mysql_kiwidb')->statement("select zrolluse ( '".$request->date_from." 00:00:00','".$request->date_to." 23:59:59' )");
 
-      $datatables = Datatables::of($query);
+      if(!$init){
+        $output = array(
+          'message' => 'Create Temporary Table Failed.',
+          'status' => false
+        );
+        return response()->json($output);
+      }
+      $query = DB::connection('mysql_kiwidb')->table("ZTROLLUSE")
+                  ->select('ZTROLLUSE.*',
+                  DB::raw('(@cnt := @cnt + 1) as rownum'))
+                  ->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy"))
+                  ->get();
+
+      $datatables = Datatables::of($query->get());
 
       return $datatables->make(true);
     }

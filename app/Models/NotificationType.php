@@ -20,6 +20,6 @@ class NotificationType extends Model
 
   public function users()
   {
-    return $this->belongsToMany('App\User','notification_type_user');
+    return $this->belongsToMany('App\Models\User','notification_type_user');
   }
 }

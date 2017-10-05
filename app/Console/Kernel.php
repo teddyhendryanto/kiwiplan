@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\NotifInputCheckerCommand',
+        'App\Console\Commands\CallRoute',
+        'App\Console\Commands\NotifInputExchangeRateCommand',
+        'App\Console\Commands\NotifUnverifiedRollCommand',
     ];
 
     /**
@@ -24,8 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('notifications:check')
-                 ->everyMinute();
+        // $schedule->command('notifications:checkExchangeRate')->everyMinute();
     }
 
     /**

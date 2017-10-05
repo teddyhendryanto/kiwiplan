@@ -22,6 +22,17 @@ class EdiExportController extends Controller
 {
     use GeneralTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth')->except([
+          'export_process',
+          'getLastEDICounter',
+          'export_edi_falied',
+          'export_edi',
+          'edi_export_history'
+        ]);
+    }
+
     public function getLastEDICounter(){
       $lastcounter = EdiExport::select(DB::raw('ifnull(max(counter),0) as counter'))
       ->where('yyyy',date('Y'))
@@ -257,6 +268,21 @@ class EdiExportController extends Controller
 
       return $export_history;
     }
+
+    public function export_process($exec_type){
+      $results = VerifyRoll::with([
+                            'receive_roll',
+                            'receive_roll.supplier',
+                            'receive_roll.purchase_order',
+                            'receive_roll.site'
+                          ])
+                          ->where('exported', false)
+                          ->get();
+      // dd($results);
+
+      $this->export_edi($exec_type, $results);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -285,21 +311,6 @@ class EdiExportController extends Controller
               ->withDateFrom($request->date_from)
               ->withDateTo($request->date_to);
 
-    }
-
-    public function export_process($exec_type){
-      $results = VerifyRoll::with([
-                            'receive_roll',
-                            'receive_roll.supplier',
-                            'receive_roll.purchase_order',
-                            'receive_roll.site'
-                          ])
-                          ->where('exported', false)
-                          ->take(1000)
-                          ->get();
-      // dd($results);
-
-      $this->export_edi($exec_type, $results);
     }
 
     /**

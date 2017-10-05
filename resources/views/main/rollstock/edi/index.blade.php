@@ -30,8 +30,7 @@
         </div>
         <div id="panel-body" class="panel-body">
           <div class="row">
-            <!-- left side -->
-            <div class="col-md-6">
+            <div class="col-md-12">
               <form id="form-filter" class="form" role="form" method="POST" action="{{ route('edi.showHistory') }}">
                 {{ csrf_field() }}
                 @if(isset($data))
@@ -40,7 +39,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="row">
-                      <div class="col-md-6">
+                      <div class="col-md-3">
                         <label for="daterange">Period</label>
                         <div class="form-group">
                           <div class="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
@@ -52,7 +51,7 @@
                           <input type="hidden" name="count_days" value="">
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-3">
                         <label for="submit">&nbsp;</label>
                         <div class="form-group">
                           <input type="submit" name="submit" class="btn btn-default" value="Search">
@@ -64,33 +63,6 @@
               </form>
             </div>
 
-            <!-- right side -->
-            <div class="col-md-6">
-              <form id="form-filter" class="form" role="form" method="POST" action="{{ route('edi.showHistory.byUniqueRollId') }}">
-                {{ csrf_field() }}
-                @if(isset($data1))
-                <input type="hidden" name="_method" value="PUT">
-                @endif
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label for="unique_roll_id">Unique Roll ID</label>
-                        <div class="form-group">
-                          <input type="text" class="form-control" name="unique_roll_id" value="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <label for="submit">&nbsp;</label>
-                        <div class="form-group">
-                          <input type="submit" name="submit" class="btn btn-default" value="Search">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
           </div>
 
           @if(isset($datas))
@@ -177,7 +149,7 @@
   <!-- Parsley JS -->
   <script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Date Range Picker -->
   <script src="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 @endsection

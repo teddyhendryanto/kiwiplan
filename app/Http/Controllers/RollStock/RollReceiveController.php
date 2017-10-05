@@ -28,23 +28,30 @@ class RollReceiveController extends Controller
      */
     public function submit(Request $request)
     {
-      $query = DB::connection('mysql_kiwidb')->table('roll_receives')
-                  ->select('roll_receives.*', DB::raw('(@cnt := @cnt + 1) as rownum'))
+      $init = DB::connection('mysql_kiwidb')->statement("select zrollrcv ( '".$request->date_from." 00:00:00','".$request->date_to." 23:59:59' )");
+
+      if(!$init){
+        $output = array(
+          'message' => 'Create Temporary Table Failed.',
+          'status' => false
+        );
+        return response()->json($output);
+      }
+      $query = DB::connection('mysql_kiwidb')->table("ZTROLLRCV")
+                  ->select('ZTROLLRCV.*',
+                  DB::raw('(@cnt := @cnt + 1) as rownum'))
                   ->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy"));
-      if($request->type != "" && $request->value != ""){
-        switch ($request->type) {
-          case 'weight':
-            $query->where('roll_receives.weight',$request->value);
-            break;
-          case 'cost':
-            $query->where('roll_receives.cost_wgt_local',$request->value);
-            break;
-        }
-      }
-      else{
-        $query->whereDate('received_js','>=',$request->date_from)
-              ->whereDate('received_js','<=',$request->date_to);
-      }
+                  if($request->type != "" && $request->value != ""){
+                    switch ($request->type) {
+                      case 'weight':
+                        $query->where('ZTROLLRCV.weight',$request->value);
+                        break;
+                      case 'cost':
+                        $query->where('ZTROLLRCV.cost_wgt_local',$request->value);
+                        break;
+                    }
+                  }
+                  $query->get();
 
       $datatables = Datatables::of($query->get());
 

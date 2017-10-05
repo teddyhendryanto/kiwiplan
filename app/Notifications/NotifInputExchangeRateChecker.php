@@ -10,24 +10,27 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Carbon\Carbon;
 use Auth;
 
-class NotifInputChecker extends Notification
+class NotifInputExchangeRateChecker extends Notification
 {
     use Queueable;
 
     protected $department;
     protected $user_notify;
-    protected $input_checker;
+    protected $type_log;
+    protected $rate_date;
+    protected $message;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($department, $user_notify, $input_checker)
+    public function __construct($department, $user_notify, $type_log, $rate_date)
     {
       $this->department = $department;
       $this->user_notify = $user_notify;
-      $this->input_checker = $input_checker;
+      $this->type_log = $type_log;
+      $this->rate_date = $rate_date;
     }
 
     /**
@@ -66,7 +69,9 @@ class NotifInputChecker extends Notification
       return [
         'department' => $this->department,
         'user_notify' => $this->user_notify,
-        'input_checker' => $this->input_checker,
+        'type_log' => $this->type_log,
+        'rate_date' => $this->rate_date,
+        'message' => $this->rate_date.' '.$this->type_log.' belum diinput'
       ];
     }
 }

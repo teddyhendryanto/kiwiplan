@@ -14,7 +14,7 @@ class AddRstatusToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('rstatus',2)->after('remember_token');
+            $table->string('rstatus',2)->after('remember_token')->default('NW');
             $table->string('created_by')->after('rstatus');
             $table->string('updated_by')->after('created_by')->nullable();
             $table->string('deleted_by')->after('updated_by')->nullable();

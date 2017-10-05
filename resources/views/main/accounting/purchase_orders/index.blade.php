@@ -51,10 +51,10 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <div class="input-group">
-                        <select class="form-control" name="order_status" required aria-describedby="sizing-addon2">
-                          <option selected="selected" disabled="disabled" hidden="hidden" value="">Site</option>
-                          <option value="0">KIM</option>
-                          <option value="1">MBI</option>
+                        <select class="form-control" name="site" required aria-describedby="sizing-addon2">
+                          <option value="all">ALL</option>
+                          <option value="1">KIM</option>
+                          <option value="2">MBI</optin>
                         </select>
                         <span class="input-group-btn" id="sizing-addon2">
                           <input type="button" name="submit" class="btn btn-default" value="Filter">
@@ -62,8 +62,11 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-md-offset-3">
-                    <a href="{{ route('purchase_orders.create') }}" class="btn btn-success pull-right">
+                  <div class="col-md-3 col-md-offset-3 text-right">
+                    <a href="{{ route('purchase_order_transfers.index') }}" class="btn btn-warning">
+                      Transfer P.O
+                    </a>
+                    <a href="{{ route('purchase_orders.create') }}" class="btn btn-success">
                       Buat Baru
                     </a>
                   </div>
@@ -94,7 +97,7 @@
   <!-- Parsley JS -->
   <script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Date Range Picker -->
   <script src="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
   <!-- DataTables -->
@@ -143,6 +146,7 @@
     function reload_datatable(){
       var _dateFrom = $('[name="date_from"]').val();
       var _dateTo   = $('[name="date_to"]').val();
+      var _site = $('[name="site"]').val();
 
       var _fileName = _dateFrom.replace(/-/g, '')+"_"+_dateTo.replace(/-/g, '');
 
@@ -154,12 +158,13 @@
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         pageLength: 100,
         ajax: {
-          'url' : '{!! route('purchase_orders.ajax.getPO', 'all') !!}',
+          'url' : '{!! route('purchase_orders.ajax.getPO') !!}',
           'type': 'POST',
           'data': {
             _token : '{{ csrf_token() }}',
             date_from : _dateFrom,
-            date_to   : _dateTo
+            date_to   : _dateTo,
+            site : _site
           },
         },
         columns: [

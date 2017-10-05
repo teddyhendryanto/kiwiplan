@@ -57,10 +57,13 @@
                           <input type="submit" name="submit" class="btn btn-default" value="Search">
                         </div>
                       </div>
-                      <div class="col-md-3 col-md-offset-3">
+                      <div class="col-md-6 text-right">
                         <label for="new">&nbsp;</label>
                         <div class="form-group">
-                          <a href="{{ route('verifyroll.create') }}" class="btn btn-success pull-right">
+                          <a href="{{ route('verifyroll.unverified') }}" class="btn btn-warning">
+                            Unverified Roll
+                          </a>
+                          <a href="{{ route('verifyroll.create') }}" class="btn btn-success">
                             Buat Baru
                           </a>
                         </div>
@@ -73,7 +76,7 @@
             </div>
           </div>
 
-          @if(isset($details) && isset($summary))
+          @if(isset($details))
             <div class="row">
       				<div class="col-md-12">
       					<div class="page-header">
@@ -90,66 +93,61 @@
                       <tr>
                         <th class="text-center w2-5">#</th>
                         <th class="text-center w7-5">Tgl <br/> Receive</th>
-                        <th class="text-center w10">PO#</th>
-                        <th class="text-center w10">Supplier</th>
+                        <th class="text-center w7-5">PO#</th>
+                        <th class="text-center w7-5">Supplier</th>
                         <th class="text-center w7-5">Paper <br/> Key</th>
                         <th class="text-center w7-5">Paper <br/> Width</th>
                         <th class="text-center w7-5">Weight <br/> (KG)</th>
                         <th class="text-center w7-5">Diam <br/> (MM)</th>
                         <th class="text-center w12-5">Unique <br/> Roll ID</th>
                         <th class="text-center w12-5">Supplier <br/>Roll ID</th>
-                        <th class="text-center w10">Doc Ref <br/> Nopol</th>
-                        <th class="text-center w10">Tgl <br/> Verifikasi</th>
-                        <th class="text-center w5"></th>
+                        <th class="text-center w12-5">Doc Ref <br/> Nopol</th>
+                        <th class="text-center w7-5">Tgl <br/> Verifikasi</th>
+                        <th class="text-center w2-5"></th>
                       </tr>
                     </thead>
         	          <tbody class="tbody searchable f12">
                       @php
                         $i = 1;
                         $grand_total_weight = 0;
+                        $subtotal_weight = 0;
                       @endphp
-                      @foreach ($summary as $sum)
+                      @foreach ($details as $key => $data)
+                        <tr>
+                          <td class="text-center w2-5">{{ $i }}.</td>
+                          <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
+                          <td class="text-center w7-5">{{ $data->po_num }}</td>
+                          <td class="text-center w7-5">{{ $data->supplier->short_name }}</td>
+                          <td class="text-center w7-5">{{ $data->paper_key }}</td>
+                          <td class="text-center w7-5">{{ $data->paper_width }}</td>
+                          <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
+                          <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
+                          <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
+                          <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
+                          <td class="text-center w12-5">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
+                          <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->verify_date)) }}</td>
+                          <td class="text-center w2-5">
+                            <a href="{{ route('verifyroll.delete', $data->verify_id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus verifikasi ini?');">
+                              <i class="fa fa-trash"></i>
+                            </a>
+                          </td>
+                        </tr>
                         @php
-                          $sum_doc_ref = $sum->doc_ref;
-                          $sum_roll_weight = $sum->roll_weight;
+                          $i++;
+                          $subtotal_weight += $data->roll_weight;
+                          $grand_total_weight += $data->roll_weight;
                         @endphp
-
-                        @foreach ($details as $data)
-
-                          @if ($data->doc_ref == $sum_doc_ref)
-                            <tr>
-                              <td class="text-center w2-5">{{ $i }}.</td>
-                              <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
-                              <td class="text-center w10">{{ $data->po_num }}</td>
-                              <td class="text-center w10">{{ $data->supplier->short_name }}</td>
-                              <td class="text-center w7-5">{{ $data->paper_key }}</td>
-                              <td class="text-center w7-5">{{ $data->paper_width }}</td>
-                              <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
-                              <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
-                              <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
-                              <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
-                              <td class="text-center w10">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
-                              <td class="text-center w10">{{ date('Y-m-d', strtotime($data->verify_date)) }}</td>
-                              <td class="text-center w5">
-                                <a href="{{ route('verifyroll.delete', $data->verify_id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus verifikasi ini?');">
-                                  <i class="fa fa-trash"></i>
-                                </a>
-                              </td>
-                            </tr>
-                            @php
-                              $i++;
-                            @endphp
-                          @endif
-                        @endforeach
+                      @endforeach
+                      @if (@$details[$key+1]['doc_ref'] != $data['doc_ref'])
                         <tr class="subtotal">
                           <td colspan="6">Subtotal</td>
-                          <td class="text-right">{{ number_format($sum_roll_weight,2,'.',',') }}</td>
+                          <td class="text-right">{{ number_format($subtotal_weight,2,'.',',') }}</td>
                           <td colspan="6"></td>
                         </tr>
                         @php
-                          $grand_total_weight+=$sum_roll_weight;
+                          $subtotal_weight = 0;
                         @endphp
-                      @endforeach
+                      @endif
         	          </tbody>
                     <tfoot>
                       <tr class="grandtotal">
@@ -174,7 +172,7 @@
   <!-- Parsley JS -->
   <script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Date Range Picker -->
   <script src="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 @endsection

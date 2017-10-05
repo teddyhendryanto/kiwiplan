@@ -24,6 +24,8 @@ class NotificationController extends Controller
         'read_at' => Carbon::now(),
         'read_by' => $user->username,
       ]);
+
+      return response()->json(array('status' => true));
     }
 
     public function markAsRead($notification_id){
@@ -35,6 +37,8 @@ class NotificationController extends Controller
           'read_at' => Carbon::now(),
           'read_by' => $user->username,
         ]);
+
+        return response()->json(array('status' => true));
       }
     }
 

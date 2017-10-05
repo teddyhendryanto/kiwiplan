@@ -51,8 +51,9 @@ return [
 
         'remote' => [
             'driver' => 'local',
-            // 'root' => storage_path('app'),
-            'root' => 'E:'
+            'root' => 'E:',
+            // 'root' => 'D:/KiwiplanEDI'
+
         ],
 
         'public' => [

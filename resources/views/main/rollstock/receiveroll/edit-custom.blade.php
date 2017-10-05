@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Search by Unique Roll ID / Doc Re')
+@section('title', 'Search Receiving')
 
 @section('pluginscss')
   <!-- Parsley -->
@@ -13,7 +13,7 @@
       <li><a href="{{ route('home') }}">Beranda</a></li>
       <li><a href="#">Roll Stock</a></li>
       <li><a href="{{ route('receiveroll.index') }}">Paper Roll</a></li>
-      <li><a href="{{ route('receiveroll.edit.custom') }}">Search by Unique Roll ID / Doc Ref</a></li>
+      <li><a href="{{ route('receiveroll.edit.custom') }}">Search Receiving</a></li>
     </ol>
   </div>
 @endsection
@@ -24,7 +24,7 @@
     <div class="col-md-12">
       <div id="panel-info" class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Search by Unique Roll ID / Doc Re</h3>
+          <h3 class="panel-title">Search Receiving</h3>
         </div>
         <div id="panel-body" class="panel-body">
           <div class="row">
@@ -43,6 +43,7 @@
                         <div class="form-group">
                           <select class="form-control" name="search_by">
                             <option value="unique_roll_id" selected>Unique Roll ID</option>
+                            <option value="supplier_roll_id">Supplier Roll ID</option>
                             <option value="doc_ref">Doc Ref</option>
                           </select>
                         </div>
@@ -109,13 +110,13 @@
                         $i = 1;
                       @endphp
                       @foreach ($datas as $data)
-                        @if ($data->verify_roll == null)
+                        @if ($data->verify == false)
                           @php
-                            $rclass = '';
+                            $rclass = 'danger';
                           @endphp
                         @else
                           @php
-                            $rclass = 'success';
+                            $rclass = '';
                           @endphp
                         @endif
                         <tr class="{{ $rclass }}">
@@ -134,7 +135,7 @@
                             <a href="{{ route('receiveroll.edit', $data->id) }}" class="btn btn-default btn-xs" target="_blank">
                               <i class="fa fa-pencil"></i>
                             </a>
-                            @if ($data->verify_roll == null)
+                            @if ($data->verify == false)
                               <a href="{{ route('receiveroll.delete', $data->id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus penerimaan ini?');">
                                 <i class="fa fa-trash"></i>
                               </a>
@@ -178,7 +179,11 @@
 
         if (_value == 'unique_roll_id') {
           $('.js-label').text('Unique Roll ID');
-        } else {
+        }
+        else if (_value == 'supplier_roll_id') {
+          $('.js-label').text('Supplier Roll ID');
+        }
+        else {
           $('.js-label').text('Doc Ref');
         }
       });

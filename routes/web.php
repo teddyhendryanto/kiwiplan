@@ -13,7 +13,7 @@
 
 Auth::routes();
 
-Route::group(['middleware' => ['auth']], function(){
+Route::group(['middleware' => ['web']], function(){
   Route::get('/', 'HomeController@index')->name('home');
   Route::get('/home', 'HomeController@index')->name('home');
 
@@ -60,11 +60,14 @@ Route::group(['middleware' => ['auth']], function(){
 
   Route::prefix('accounting')->group(function () {
     Route::resource('purchase_orders','Accounting\PurchaseOrderController');
-    Route::post('purchase_orders/{site}','Accounting\PurchaseOrderController@getPO')->name('purchase_orders.ajax.getPO');
+    Route::get('purchase_orders/print/{id}','Accounting\PurchaseOrderController@print_po')->name('purchase_orders.print');
+    Route::post('purchase_orders/site','Accounting\PurchaseOrderController@getPO')->name('purchase_orders.ajax.getPO');
     Route::post('purchase_orders/po/getLastPONumber','Accounting\PurchaseOrderController@getLastPONumber')->name('purchase_orders.ajax.getLastPONumber');
     Route::post('purchase_orders/po/getLastPONumberBefore','Accounting\PurchaseOrderController@getLastPONumberBefore')->name('purchase_orders.ajax.getLastPONumberBefore');
     Route::post('purchase_orders/supplier/getSupplierDetail','Accounting\PurchaseOrderController@getSupplierDetail')->name('purchase_orders.ajax.getSupplierDetail');
     Route::post('purchase_orders/deleteDetail/single','Accounting\PurchaseOrderController@deleteDetailSingle')->name('purchase_orders.ajax.deleteDetailSingle');
+
+    Route::resource('purchase_order_transfers','Accounting\PurchaseOrderTransferController',['only' => ['index','create','store','show']]);
 
     Route::resource('exchange_rates','Accounting\ExchangeRateController');
     Route::post('exchange_rates/getExchangeRateDatatable','Accounting\ExchangeRateController@getExchangeRateDatatable')->name('exchange_rates.ajax.getExchangeRateDatatable');
@@ -109,6 +112,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::prefix('verification')->group(function(){
       Route::resource('verifyroll','RollStock\VerifyRollController',['only' => ['index', 'create', 'store']]);
+      Route::get('verifyroll/unverified','RollStock\VerifyRollController@unverified')->name('verifyroll.unverified');
+      Route::post('verifyroll/unverified','RollStock\VerifyRollController@unverified_store')->name('verifyroll.unverified.store');
       Route::get('verifyroll/delete/{id}','RollStock\VerifyRollController@delete')->name('verifyroll.delete');
       Route::post('verifyroll/showHistory','RollStock\VerifyRollController@showHistory')->name('verifyroll.showHistory');
       Route::post('verifyroll/showVerification','RollStock\VerifyRollController@showVerification')->name('verifyroll.showVerification');
@@ -131,6 +136,8 @@ Route::group(['middleware' => ['auth']], function(){
       Route::get('stock','RollStock\RollStockController@index')->name('rollstocks.stock.index');
       Route::post('stock','RollStock\RollStockController@submit')->name('rollstocks.stock.submit');
     });
+
+    Route::get('notif/{status}','NotifController@index')->name('notif.index');
 
 
   });

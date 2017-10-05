@@ -42,7 +42,7 @@
                   <div class="col-md-3">
                     <label for="name">Tipe Notifikasi <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="type" name="type" class="form-control" required
+                      <input type="text" id="type" name="type" class="form-control text-lowercase" required
                       value="{{ $data->type }}" autocomplete="off">
                     </div>
                   </div>
@@ -51,7 +51,7 @@
                   <div class="col-md-6">
                     <label for="name">Deskripsi</label>
                     <div class="form-group">
-                      <input type="text" id="description" name="description" class="form-control"
+                      <input type="text" id="description" name="description" class="form-control text-lowercase"
                       value="{{ $data->description }}" autocomplete="off">
                     </div>
                   </div>

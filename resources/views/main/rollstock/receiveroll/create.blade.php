@@ -15,7 +15,7 @@
       <li><a href="{{ route('home') }}">Beranda</a></li>
       <li><a href="#">Roll Stock</a></li>
       <li><a href="{{ route('receiveroll.index') }}">Penerimaan Roll</a></li>
-      <li><a href="{{ route('receiveroll.create') }}" class="active">Baru</a></li>
+      <li><a href="{{ route('receiveroll.create') }}" class="active">Buat Baru</a></li>
     </ol>
   </div>
 @endsection
@@ -188,7 +188,7 @@
   <!-- Parsley -->
 	<script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Bootstrap Datetimepicker -->
 	<script src="{{ asset('vendor/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
 @endsection

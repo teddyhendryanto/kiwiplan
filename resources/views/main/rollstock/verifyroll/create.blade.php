@@ -16,7 +16,7 @@
       <li><a href="#">Roll Stock</a></li>
       <li><a href="#">Paper Roll</a></li>
       <li><a href="{{ route('verifyroll.index') }}">Verifikasi Roll</a></li>
-      <li><a href="{{ route('verifyroll.create') }}" class="active">Baru</a></li>
+      <li><a href="{{ route('verifyroll.create') }}" class="active">Buat Baru</a></li>
     </ol>
   </div>
 @endsection
@@ -53,6 +53,16 @@
                           </select>
                         </div>
                       </div>
+                      {{-- <div class="col-md-2">
+                        <label for="vstatus">Verifikasi Status</label>
+                        <div class="form-group">
+                          <select class="form-control" name="vstatus">
+                            <option value="0">Unverified</option>
+                            <option value="1">Verified</option>
+                            <option value="2" selected>All</option>
+                          </select>
+                        </div>
+                      </div> --}}
                       <div class="col-md-3">
                         <label for="rsatus">Record Status</label>
                         <div class="form-group">
@@ -101,7 +111,7 @@
             </div>
           </div>
 
-          @if(isset($details) && isset($summary))
+          @if(isset($details))
             <form id="form-verify" class="form" role="form" method="POST" action="{{ route('verifyroll.store') }}">
               {{ csrf_field() }}
               @if(isset($data))
@@ -132,13 +142,13 @@
                     <table id="table-history" class="table table-hover table-striped" width="100%">
                       <thead class="f12">
                         <tr>
-                          <th class="text-center w5">
+                          <th class="text-center w2-5">
                             <input type="checkbox" name="cb-all" value="">
                           </th>
                           <th class="text-center w2-5">#</th>
                           <th class="text-center w7-5">Tgl <br/> Receive</th>
-                          <th class="text-center w10">PO#</th>
-                          <th class="text-center w10">Supplier</th>
+                          <th class="text-center w7-5">PO#</th>
+                          <th class="text-center w7-5">Supplier</th>
                           <th class="text-center w7-5">Paper <br/> Key</th>
                           <th class="text-center w7-5">Paper <br/> Width</th>
                           <th class="text-center w7-5">Weight <br/> (KG)</th>
@@ -146,68 +156,63 @@
                           <th class="text-center w12-5">Unique <br/> Roll ID</th>
                           <th class="text-center w12-5">Supplier <br/>Roll ID</th>
                           <th class="text-center w10">Doc Ref <br/> Nopol</th>
-                          <th class="text-center w10">Tgl <br/> Verifikasi</th>
+                          <th class="text-center w7-5">Tgl <br/> Verifikasi</th>
                         </tr>
                       </thead>
           	          <tbody class="tbody searchable f12">
                         @php
                           $i = 1;
                           $grand_total_weight = 0;
+                          $subtotal_weight = 0;
                         @endphp
-                        @foreach ($summary as $sum)
-                          @php
-                            $sum_doc_ref = $sum->doc_ref;
-                            $sum_roll_weight = $sum->roll_weight;
-                          @endphp
-
-                          @foreach ($details as $data)
-
-                            @if ($data->doc_ref == $sum_doc_ref)
-                              <tr>
-                                <td class="text-center w5">
-                                  @if (isset($data->verify_roll))
-                                    <input type="checkbox" name="cb[]" value="{{ $data->id }}" disabled>
-                                  @else
-                                    <input type="checkbox" name="cb[]" value="{{ $data->id }}">
-                                  @endif
-                                </td>
-                                <td class="text-center w2-5">{{ $i }}.</td>
-                                <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
-                                <td class="text-center w10">{{ $data->po_num }}</td>
-                                <td class="text-center w10">{{ $data->supplier->short_name }}</td>
-                                <td class="text-center w7-5">{{ $data->paper_key }}</td>
-                                <td class="text-center w7-5">{{ $data->paper_width }}</td>
-                                <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
-                                <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
-                                <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
-                                <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
-                                <td class="text-center w10">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
-                                <td class="text-center w10">
-                                  @if (isset($data->verify_roll))
-                                    {{ date('Y-m-d', strtotime($data->verify_roll->verify_date)) }}
-                                  @endif
-                                </td>
-                              </tr>
-                              @php
-                                $i++;
-                              @endphp
-                            @endif
-                          @endforeach
-                          <tr class="subtotal">
-                            <td colspan="6">Subtotal</td>
-                            <td class="text-right">{{ number_format($sum_roll_weight,2,'.',',') }}</td>
-                            <td colspan="6"></td>
+                        @foreach ($details as $key => $data)
+                          <tr>
+                            <td class="text-center w2-5">
+                              @if ($data->verify == true)
+                                <input type="checkbox" name="cb[]" value="{{ $data->id }}" disabled>
+                              @else
+                                <input type="checkbox" name="cb[]" value="{{ $data->id }}">
+                              @endif
+                            </td>
+                            <td class="text-center w2-5">{{ $i }}.</td>
+                            <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
+                            <td class="text-center w7-5">{{ $data->po_num }}</td>
+                            <td class="text-center w7-5">{{ $data->supplier->short_name }}</td>
+                            <td class="text-center w7-5">{{ $data->paper_key }}</td>
+                            <td class="text-center w7-5">{{ $data->paper_width }}</td>
+                            <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
+                            <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
+                            <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
+                            <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
+                            <td class="text-center w10">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
+                            <td class="text-center w7-5">
+                              @if (isset($data->verify_roll) != null)
+                                {{ date('Y-m-d', strtotime($data->verify_roll->verify_date)) }}
+                              @endif
+                            </td>
                           </tr>
                           @php
-                            $grand_total_weight+=$sum_roll_weight;
+                          $i++;
+                          $subtotal_weight += $data->roll_weight;
+                          $grand_total_weight += $data->roll_weight;
                           @endphp
+                          @if (@$details[$key+1]['doc_ref'] != $data['doc_ref'])
+                            <tr class="subtotal">
+                              <td colspan="7">Subtotal</td>
+                              <td class="text-right">{{ number_format($subtotal_weight,2,'.',',') }}</td>
+                              <td colspan="5"></td>
+                            </tr>
+                            @php
+                              $subtotal_weight = 0;
+                            @endphp
+                          @endif
                         @endforeach
           	          </tbody>
                       <tfoot>
                         <tr class="grandtotal">
-                          <td colspan="6">Grandtotal</td>
+                          <td colspan="7">Grandtotal</td>
                           <td class="text-right">{{ number_format($grand_total_weight,2,'.',',') }}</td>
-                          <td colspan="6"></td>
+                          <td colspan="5"></td>
                         </tr>
                       </tfoot>
                     </table>
@@ -226,7 +231,7 @@
   <!-- Parsley -->
 	<script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Date Range Picker -->
   <script src="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 @endsection

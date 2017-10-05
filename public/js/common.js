@@ -66,7 +66,7 @@ $(document).ready(function() {
 	}
 
 	$('.notifications-scroll').slimScroll({
-		height: '250px',
+		height: 'auto',
 		wheelStep: 5,
 	});
 
@@ -303,6 +303,16 @@ function markAsRead(notification_id){
 }
 
 function markAllAsRead(){
-  $.get('/markAllAsRead');
-  location.reload();
+  $.get('/markAllAsRead', function(data, status, xhr){
+		console.log(data);
+		console.log(status);
+		console.log(xhr.status);
+		if(xhr.status == 200){
+			if(data.status == true) location.reload();
+			else alert('Error.');
+		}
+		else{
+			alert('Whoops. Error.');
+		}
+  });
 }

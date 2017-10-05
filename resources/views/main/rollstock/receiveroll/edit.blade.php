@@ -66,6 +66,7 @@
                       <div class="col-md-6">
                         <label for="site">Site <span class="text-red">*</span></label>
                         <div class="form-group">
+                          <input type="hidden" name="site_id" value="{{ $data->site_id }}">
                           <select class="form-control" name="site" disabled>
                             @foreach ($sites as $site)
                               @if ($site->id == $data->site_id)
@@ -106,7 +107,7 @@
                       <div class="col-md-6">
                         <label for="po_num">P.O# <span class="text-red">*</span></label>
                         <div class="form-group">
-                          <input type="hidden" name="po_id" value="">
+                          <input type="hidden" name="po_id" value="{{ $data->po_id }}">
                           <input type="text" name="po_num" class="form-control js-change" value="{{ $data->po_num }}" required>
                         </div>
                       </div>
@@ -257,34 +258,34 @@
                                   </td>
                                   <td class="text-center w25">{{ $data->verify_roll->deleted_by }} <br/> {{ $data->verify_roll->deleted_at }} </td>
                                 </tr>
-                              @endif
-                              <!-- EDI Export -->
-                              @if ($data->verify_roll->edi_export_details != null)
-                                @foreach ($data->verify_roll->edi_export_details as $detail)
-                                  <tr>
-                                    <td class="text-center w25">
-                                      EDI EXPORT
-                                      <br/>
-                                      <a href="{{ route('edi.show', $detail->edi_export_id) }}" target="_blank">
-                                        <i class="f10">{{ $detail->edi_counter }}</i>
-                                      </a>
-                                    </td>
-                                    <td class="text-center w25">{{ $detail->created_by }} <br/> {{ $detail->created_at }} </td>
-                                    <td class="text-center w25">
-                                      @if ($detail->rstatus == 'AM')
-                                        {{ $detail->updated_by }} <br/> {{ $detail->updated_at }}
-                                      @endif
-                                    </td>
-                                    <td class="text-center w25">{{ $detail->deleted_by }} <br/> {{ $detail->deleted_at }} </td>
-                                  </tr>
-                                @endforeach
+
+                                <!-- EDI Export -->
+                                @if ($data->verify_roll->edi_export_details != null)
+                                  @foreach ($data->verify_roll->edi_export_details as $detail)
+                                    <tr>
+                                      <td class="text-center w25">
+                                        EDI EXPORT
+                                        <br/>
+                                        <a href="{{ route('edi.show', $detail->edi_export_id) }}" target="_blank">
+                                          <i class="f10">{{ $detail->edi_counter }}</i>
+                                        </a>
+                                      </td>
+                                      <td class="text-center w25">{{ $detail->created_by }} <br/> {{ $detail->created_at }} </td>
+                                      <td class="text-center w25">
+                                        @if ($detail->rstatus == 'AM')
+                                          {{ $detail->updated_by }} <br/> {{ $detail->updated_at }}
+                                        @endif
+                                      </td>
+                                      <td class="text-center w25">{{ $detail->deleted_by }} <br/> {{ $detail->deleted_at }} </td>
+                                    </tr>
+                                  @endforeach
+                                @endif
                               @endif
                 	          </tbody>
                           </table>
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
                 <div class="row">
@@ -307,7 +308,7 @@
   <!-- Parsley -->
 	<script src="{{ asset('js/parsley.min.js') }}"></script>
   <!-- Moment JS -->
-  <script src="{{ asset('js/moment.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
   <!-- Bootstrap Datetimepicker -->
 	<script src="{{ asset('vendor/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
 @endsection
