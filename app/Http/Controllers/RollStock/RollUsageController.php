@@ -12,6 +12,16 @@ use DB;
 class RollUsageController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -34,11 +44,12 @@ class RollUsageController extends Controller
       }
       $query = DB::connection('mysql_kiwidb')->table("ZTROLLUSE")
                   ->select('ZTROLLUSE.*',
+                  DB::raw('(weight_before_use - weight_use) as weight_balance'),
                   DB::raw('(@cnt := @cnt + 1) as rownum'))
                   ->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy"))
                   ->get();
 
-      $datatables = Datatables::of($query->get());
+      $datatables = Datatables::of($query);
 
       return $datatables->make(true);
     }

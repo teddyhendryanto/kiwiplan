@@ -51,9 +51,7 @@ return [
 
         'remote' => [
             'driver' => 'local',
-            'root' => 'E:',
-            // 'root' => 'D:/KiwiplanEDI'
-
+            'root' => env('EDI_PATH'),
         ],
 
         'public' => [

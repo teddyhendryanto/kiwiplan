@@ -131,89 +131,183 @@
               <div class="col-md-12">
                 <div class="table-responsive">
                   <table id="table-history" class="table table-hover table-striped" width="100%">
-                    <thead class="f12">
-                      <tr>
-                        <th class="text-center w2-5">#</th>
-                        <th class="text-center w7-5">Tgl <br/> Receive</th>
-                        <th class="text-center w10">PO#</th>
-                        <th class="text-center w10">Supplier</th>
-                        <th class="text-center w7-5">Paper <br/> Key</th>
-                        <th class="text-center w7-5">Paper <br/> Width</th>
-                        <th class="text-center w7-5">Weight <br/> (KG)</th>
-                        <th class="text-center w7-5">Diam <br/> (MM)</th>
-                        <th class="text-center w12-5">Unique <br/> Roll ID</th>
-                        <th class="text-center w12-5">Supplier <br/>Roll ID</th>
-                        <th class="text-center w10">Doc Ref <br/> Nopol</th>
-                        <th class="text-center w15"></th>
-                      </tr>
-                    </thead>
-        	          <tbody class="tbody searchable f12">
-                      @php
-                        $i = 1;
-                        $grand_total_weight = 0;
-                        $subtotal_weight = 0;
-                      @endphp
-                      @foreach ($details as $key => $data)
-                        @if ($data->verify == false)
-                          @php
-                            $rclass = 'danger';
-                          @endphp
-                        @else
-                          @php
-                            $rclass = '';
-                          @endphp
-                        @endif
-                        <tr class="{{ $rclass }}">
-                          <td class="text-center w2-5">{{ $i }}.</td>
-                          <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
-                          <td class="text-center w10">{{ $data->po_num }}</td>
-                          <td class="text-center w10">{{ $data->short_name }}</td>
-                          <td class="text-center w7-5">{{ $data->paper_key }}</td>
-                          <td class="text-center w7-5">{{ $data->paper_width }}</td>
-                          <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
-                          <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
-                          <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
-                          <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
-                          <td class="text-center w10">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
-                          <td class="text-center w15">
-                            <a href="{{ route('receiveroll.edit', $data->id) }}" class="btn btn-default btn-xs" target="_blank">
-                              <i class="fa fa-pencil"></i>
-                            </a>
-                            @if ($data->verify == false)
-                              <a href="{{ route('receiveroll.delete', $data->id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus penerimaan ini?');">
-                                <i class="fa fa-trash"></i>
-                              </a>
-                            @else
-                              <a href="javascript:void(0)" class="btn btn-default btn-xs" target="_blank" onclick="return alert('Roll ini sudah di-verifikasi.');">
-                                <i class="fa fa-trash"></i>
-                              </a>
-                            @endif
-                          </td>
+                    @if (Auth::user()->can('accounting-access'))
+                      <!-- Can see price -->
+                      <thead class="f12">
+                        <tr>
+                          <th class="text-center w2-5">#</th>
+                          <th class="text-center w7-5">Tgl <br/> Receive</th>
+                          <th class="text-center w7-5">PO#</th>
+                          <th class="text-center w7-5">Supplier</th>
+                          <th class="text-center w7-5">Paper <br/> Key</th>
+                          <th class="text-center w7-5">Paper <br/> Width</th>
+                          <th class="text-center w7-5">Weight <br/> (KG)</th>
+                          <th class="text-center w7-5">Diam <br/> (MM)</th>
+                          <th class="text-center w12-5">Unique <br/> Roll ID</th>
+                          <th class="text-center w12-5">Supplier <br/>Roll ID</th>
+                          <th class="text-center w7-5">Doc Ref <br/> Nopol</th>
+                          <th class="text-center w7-5">Paper <br/> Price</th>
+                          <th class="text-center w5"></th>
                         </tr>
+                      </thead>
+                      <tbody class="tbody searchable f12">
                         @php
-                          $i++;
-                          $subtotal_weight += $data->roll_weight;
-                          $grand_total_weight += $data->roll_weight;
+                          $i = 1;
+                          $grand_total_weight = 0;
+                          $subtotal_weight = 0;
                         @endphp
-                        @if (@$details[$key+1]['doc_ref'] != $data['doc_ref'])
-                          <tr class="subtotal">
-                            <td colspan="6">Subtotal</td>
-                            <td class="text-right">{{ number_format($subtotal_weight,2,'.',',') }}</td>
-                            <td colspan="5"></td>
+                        @foreach ($details as $key => $data)
+                          @if ($data->verify == false)
+                            @php
+                              $rclass = 'danger';
+                            @endphp
+                          @else
+                            @php
+                              $rclass = '';
+                            @endphp
+                          @endif
+                          <tr class="{{ $rclass }}">
+                            <td class="text-center w2-5">{{ $i }}.</td>
+                            <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
+                            <td class="text-center w7-5">{{ $data->po_num }}</td>
+                            <td class="text-center w7-5">{{ $data->short_name }}</td>
+                            <td class="text-center w7-5">{{ $data->paper_key }}</td>
+                            <td class="text-center w7-5">{{ $data->paper_width }}</td>
+                            <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
+                            <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
+                            <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
+                            <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
+                            <td class="text-center w7-5">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
+                            <td class="text-right w7-5">{{ number_format($data->paper_price,2,'.',',') }}</td>
+                            <td class="text-center w5">
+                              <a href="{{ route('receiveroll.edit', $data->id) }}" class="btn btn-default btn-xs" target="_blank">
+                                <i class="fa fa-pencil"></i>
+                              </a>
+                              @if ($data->verify == false)
+                                <a href="{{ route('receiveroll.delete', $data->id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus penerimaan ini?');">
+                                  <i class="fa fa-trash"></i>
+                                </a>
+                              @else
+                                <a href="javascript:void(0)" class="btn btn-default btn-xs" target="_blank" onclick="return alert('Roll ini sudah di-verifikasi.');">
+                                  <i class="fa fa-trash"></i>
+                                </a>
+                              @endif
+                            </td>
                           </tr>
                           @php
-                            $subtotal_weight = 0;
+                            $i++;
+                            $subtotal_weight += $data->roll_weight;
+                            $grand_total_weight += $data->roll_weight;
                           @endphp
-                        @endif
-                      @endforeach
-        	          </tbody>
-                    <tfoot>
-                      <tr class="grandtotal">
-                        <td colspan="6">Grandtotal</td>
-                        <td class="text-right">{{ number_format($grand_total_weight,2,'.',',') }}</td>
-                        <td colspan="5"></td>
-                      </tr>
-                    </tfoot>
+                          @if (@$details[$key+1]['doc_ref'] != $data['doc_ref'])
+                            <tr class="subtotal">
+                              <td colspan="6">Subtotal</td>
+                              <td class="text-right">{{ number_format($subtotal_weight,2,'.',',') }}</td>
+                              <td colspan="6"></td>
+                            </tr>
+                            @php
+                              $subtotal_weight = 0;
+                            @endphp
+                          @endif
+                        @endforeach
+          	          </tbody>
+                      <tfoot>
+                        <tr class="grandtotal">
+                          <td colspan="6">Grandtotal</td>
+                          <td class="text-right">{{ number_format($grand_total_weight,2,'.',',') }}</td>
+                          <td colspan="6"></td>
+                        </tr>
+                      </tfoot>
+                    @else
+                      <!-- Other Department -->
+                      <thead class="f12">
+                        <tr>
+                          <th class="text-center w2-5">#</th>
+                          <th class="text-center w7-5">Tgl <br/> Receive</th>
+                          <th class="text-center w10">PO#</th>
+                          <th class="text-center w10">Supplier</th>
+                          <th class="text-center w7-5">Paper <br/> Key</th>
+                          <th class="text-center w7-5">Paper <br/> Width</th>
+                          <th class="text-center w7-5">Weight <br/> (KG)</th>
+                          <th class="text-center w7-5">Diam <br/> (MM)</th>
+                          <th class="text-center w12-5">Unique <br/> Roll ID</th>
+                          <th class="text-center w12-5">Supplier <br/>Roll ID</th>
+                          <th class="text-center w10">Doc Ref <br/> Nopol</th>
+                          <th class="text-center w15"></th>
+                        </tr>
+                      </thead>
+          	          <tbody class="tbody searchable f12">
+                        @php
+                          $i = 1;
+                          $grand_total_weight = 0;
+                          $subtotal_weight = 0;
+                        @endphp
+                        @foreach ($details as $key => $data)
+                          @if ($data->verify == false)
+                            @php
+                              $rclass = 'danger';
+                            @endphp
+                          @else
+                            @php
+                              $rclass = '';
+                            @endphp
+                          @endif
+                          <tr class="{{ $rclass }}">
+                            <td class="text-center w2-5">{{ $i }}.</td>
+                            <td class="text-center w7-5">{{ date('Y-m-d', strtotime($data->receive_date)) }} <br/> {{ $data->receive_time }} </td>
+                            <td class="text-center w10">{{ $data->po_num }}</td>
+                            <td class="text-center w10">{{ $data->short_name }}</td>
+                            <td class="text-center w7-5">{{ $data->paper_key }}</td>
+                            <td class="text-center w7-5">{{ $data->paper_width }}</td>
+                            <td class="text-right w7-5">{{ number_format($data->roll_weight,2,'.',',') }}</td>
+                            <td class="text-right w7-5">{{ number_format($data->roll_diameter,2,'.',',') }}</td>
+                            <td class="text-center w12-5">{{ $data->unique_roll_id }}</td>
+                            <td class="text-center w12-5">{{ $data->supplier_roll_id }}</td>
+                            <td class="text-center w10">{{ $data->doc_ref }} <br/> {{ $data->wagon }}</td>
+                            @if (Auth::user()->can('accounting-access'))
+                              <th class="text-center w15">Paper <br/> Price</th>
+                            @else
+                              <td class="text-center w15">
+                                <a href="{{ route('receiveroll.edit', $data->id) }}" class="btn btn-default btn-xs" target="_blank">
+                                  <i class="fa fa-pencil"></i>
+                                </a>
+                                @if ($data->verify == false)
+                                  <a href="{{ route('receiveroll.delete', $data->id) }}" class="btn btn-default btn-xs" target="_blank" onclick="return confirm('Yakin mau hapus penerimaan ini?');">
+                                    <i class="fa fa-trash"></i>
+                                  </a>
+                                @else
+                                  <a href="javascript:void(0)" class="btn btn-default btn-xs" target="_blank" onclick="return alert('Roll ini sudah di-verifikasi.');">
+                                    <i class="fa fa-trash"></i>
+                                  </a>
+                                @endif
+                              </td>
+                            @endif
+                          </tr>
+                          @php
+                            $i++;
+                            $subtotal_weight += $data->roll_weight;
+                            $grand_total_weight += $data->roll_weight;
+                          @endphp
+                          @if (@$details[$key+1]['doc_ref'] != $data['doc_ref'])
+                            <tr class="subtotal">
+                              <td colspan="6">Subtotal</td>
+                              <td class="text-right">{{ number_format($subtotal_weight,2,'.',',') }}</td>
+                              <td colspan="5"></td>
+                            </tr>
+                            @php
+                              $subtotal_weight = 0;
+                            @endphp
+                          @endif
+                        @endforeach
+          	          </tbody>
+                      <tfoot>
+                        <tr class="grandtotal">
+                          <td colspan="6">Grandtotal</td>
+                          <td class="text-right">{{ number_format($grand_total_weight,2,'.',',') }}</td>
+                          <td colspan="5"></td>
+                        </tr>
+                      </tfoot>
+                    @endif
                   </table>
                 </div>
               </div>

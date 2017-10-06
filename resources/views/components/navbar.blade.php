@@ -1,6 +1,6 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="brand">
-    <a href="index.html"><img src="{{ asset('img/logo-text.png')}}" alt="Karya Indah Multiguna" class="img-responsive logo"></a>
+    <a href="{{ route('home') }}"><img src="{{ asset('img/'.env('SITE_ASSET').'/logo-text.png')}}" alt="{{ env('SITE_NAME') }}" class="img-responsive logo"></a>
   </div>
   <div class="container-fluid">
     <div class="navbar-btn">

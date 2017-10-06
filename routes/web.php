@@ -139,6 +139,5 @@ Route::group(['middleware' => ['web']], function(){
 
     Route::get('notif/{status}','NotifController@index')->name('notif.index');
 
-
   });
 });

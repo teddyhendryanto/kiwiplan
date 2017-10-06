@@ -1,6 +1,24 @@
 $(document).ready(function() {
 
 	/*-----------------------------------/
+	/*	SCROLL
+	/*----------------------------------*/
+	$(window).scroll(function () {
+    if ($(this).scrollTop() > 100) {
+      $('.scrollUp').fadeIn();
+    } else {
+      $('.scrollUp').fadeOut();
+    }
+  });
+
+  $('.scrollUp').click(function () {
+    $("html, body").animate({
+        scrollTop: 0
+    }, 600);
+    return false;
+  });
+
+	/*-----------------------------------/
 	/*	TOP NAVIGATION AND LAYOUT
 	/*----------------------------------*/
 
@@ -111,7 +129,6 @@ $(document).ready(function() {
 		}
 	);
 
-
 	/*-----------------------------------/
 	/*	PANEL SCROLLING
 	/*----------------------------------*/
@@ -141,7 +158,6 @@ $(document).ready(function() {
 			$(this).parents('li').removeClass('completed');
 		}
 	});
-
 
 	/*-----------------------------------/
 	/* TOASTR NOTIFICATION

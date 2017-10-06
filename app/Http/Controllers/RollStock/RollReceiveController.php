@@ -12,6 +12,16 @@ use DB;
 class RollReceiveController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -40,20 +50,10 @@ class RollReceiveController extends Controller
       $query = DB::connection('mysql_kiwidb')->table("ZTROLLRCV")
                   ->select('ZTROLLRCV.*',
                   DB::raw('(@cnt := @cnt + 1) as rownum'))
-                  ->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy"));
-                  if($request->type != "" && $request->value != ""){
-                    switch ($request->type) {
-                      case 'weight':
-                        $query->where('ZTROLLRCV.weight',$request->value);
-                        break;
-                      case 'cost':
-                        $query->where('ZTROLLRCV.cost_wgt_local',$request->value);
-                        break;
-                    }
-                  }
-                  $query->get();
+                  ->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy"))
+                  ->get();
 
-      $datatables = Datatables::of($query->get());
+      $datatables = Datatables::of($query);
 
       return $datatables->make(true);
 

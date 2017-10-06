@@ -7,7 +7,7 @@
         <div class="left">
           <div class="content">
             <div class="header">
-              <img src="{{ asset('img/logo-text.png') }}" alt="Karya Indah Multiguna">
+              <img src="{{ asset('img/'.env('SITE_ASSET').'/logo-text.png') }}" alt="{{ env('SITE_NAME') }}">
               <p class="lead">Silahkan Login</p>
             </div>
             <form class="form-auth-small" method="POST" action="{{ route('login') }}">
