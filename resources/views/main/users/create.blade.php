@@ -42,8 +42,8 @@
                   <div class="col-md-6">
                     <label for="username">Username <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="username" name="username" class="form-control text-lowercase" required
-                      value="{{ old('username') }}" autocomplete="off" maxlength="5">
+                      <input type="text" id="username" name="username" class="form-control text-transform-none" required
+                      value="{{ old('username') }}" autocomplete="off" maxlength="6">
                     </div>
                   </div>
                 </div>
@@ -51,7 +51,7 @@
                   <div class="col-md-6">
                     <label for="name">Nama Lengkap <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="name" name="name" class="form-control" required
+                      <input type="text" id="name" name="name" class="form-control text-transform-none" required
                       value="{{ old('name') }}" autocomplete="off">
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                   <div class="col-md-6">
                     <label for="email">Email <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="email" id="email" name="email" class="form-control text-lowercase"
+                      <input type="email" id="email" name="email" class="form-control text-transform-none"
                       value="{{ old('email') }}" autocomplete="off">
                     </div>
                   </div>
@@ -69,7 +69,7 @@
                   <div class="col-md-6">
                     <label for="password">Password <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="password" id="password" name="password" class="form-control text-lowercase"
+                      <input type="password" id="password" name="password" class="form-control text-transform-none"
                       value="" autocomplete="off" required>
                     </div>
                   </div>

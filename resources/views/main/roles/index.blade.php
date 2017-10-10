@@ -11,7 +11,7 @@
   <div id="#breadcrumb">
     <ol class="breadcrumb">
       <li><a href="{{ route('home') }}">Beranda</a></li>
-      <li><a href="#">Admin</a></li>
+      <li><a href="#">User</a></li>
       <li><a href="{{ route('roles.index') }}" class="active">Role</a></li>
     </ol>
   </div>

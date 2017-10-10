@@ -242,7 +242,7 @@
                                 <tr>
                                   <td class="text-center w25">
                                     Verify
-                                    @ability('superuser,rollstock-spv', 'rollstock-destroy')
+                                    @ability('superuser,rollstock-head,rollstock-spv', 'rollstock-destroy')
                                       </br>
                                       <a href="{{ route('verifyroll.delete', $data->verify_roll->id) }}" target="_blank" onclick="return confirm('Yakin mau hapus verifikasi ini?');">
                                         <i class="f10">Hapus</i>

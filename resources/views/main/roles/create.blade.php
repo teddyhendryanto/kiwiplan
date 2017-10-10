@@ -13,7 +13,7 @@
   <div id="#breadcrumb">
     <ol class="breadcrumb">
       <li><a href="{{ route('home') }}">Beranda</a></li>
-      <li><a href="#">Admin</a></li>
+      <li><a href="#">User</a></li>
       <li><a href="{{ route('roles.index') }}">Role</a></li>
       <li><a href="{{ route('roles.create') }}" class="active">Role Baru</a></li>
     </ol>
@@ -42,7 +42,7 @@
                   <div class="col-md-3">
                     <label for="name">Nama Role <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="name" name="name" class="form-control" required
+                      <input type="text" id="name" name="name" class="form-control text-transform-none" required
                       value="{{ old('name') }}" autocomplete="off">
                     </div>
                   </div>
@@ -51,7 +51,7 @@
                   <div class="col-md-3">
                     <label for="name">Display <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="display_name" name="display_name" class="form-control" required
+                      <input type="text" id="display_name" name="display_name" class="form-control text-transform-none" required
                       value="{{ old('display_name') }}" autocomplete="off">
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                   <div class="col-md-3">
                     <label for="name">Deskripsi</label>
                     <div class="form-group">
-                      <input type="text" id="description" name="description" class="form-control"
+                      <input type="text" id="description" name="description" class="form-control text-transform-none"
                       value="{{ old('description') }}" autocomplete="off">
                     </div>
                   </div>

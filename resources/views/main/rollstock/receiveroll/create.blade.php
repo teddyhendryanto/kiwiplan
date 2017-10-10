@@ -57,7 +57,11 @@
                         <div class="form-group">
                           <select class="form-control" name="site">
                             @foreach ($sites as $site)
-                              <option value="{{ $site->id }}">{{ $site->short_name }}</option>
+                              @if ($site->id == env('SITE_ID'))
+                                <option value="{{ $site->id }}" selected>{{ $site->short_name }}</option>
+                              @else
+                                <option value="{{ $site->id }}">{{ $site->short_name }}</option>
+                              @endif
                             @endforeach
                           </select>
                         </div>

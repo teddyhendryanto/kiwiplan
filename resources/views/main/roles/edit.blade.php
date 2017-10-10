@@ -13,7 +13,7 @@
   <div id="#breadcrumb">
     <ol class="breadcrumb">
       <li><a href="{{ route('home') }}">Beranda</a></li>
-      <li><a href="#">Admin</a></li>
+      <li><a href="#">User</a></li>
       <li><a href="{{ route('roles.index') }}">Role</a></li>
       <li><a href="{{ route('roles.edit', Request::segment(3)) }}" class="active">Edit Role</a></li>
     </ol>
@@ -42,7 +42,7 @@
                   <div class="col-md-3">
                     <label for="name">Nama Role <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="name" name="name" class="form-control"
+                      <input type="text" id="name" name="name" class="form-control text-transform-none"
                       value="{{ $data->name }}" autocomplete="off" required>
                     </div>
                   </div>
@@ -51,7 +51,7 @@
                   <div class="col-md-3">
                     <label for="name">Display <span class="text-red">*</span></label>
                     <div class="form-group">
-                      <input type="text" id="display_name" name="display_name" class="form-control"
+                      <input type="text" id="display_name" name="display_name" class="form-control text-transform-none"
                       value="{{ $data->display_name }}" autocomplete="off" required>
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                   <div class="col-md-3">
                     <label for="name">Deskripsi</label>
                     <div class="form-group">
-                      <input type="text" id="description" name="description" class="form-control"
+                      <input type="text" id="description" name="description" class="form-control text-transform-none"
                       value="{{ $data->description }}" autocomplete="off">
                     </div>
                   </div>

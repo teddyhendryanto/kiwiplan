@@ -51,11 +51,6 @@
   		    </div>
         </div>
       </div>
-      <div id="btn-navigation">
-        <a href="{{ route('users.create') }}">
-          <button type="button" class="btn btn-default" name="button">New Admin</button>
-        </a>
-      </div>
     </div>
   </div>
 @endsection

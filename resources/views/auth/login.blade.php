@@ -14,7 +14,7 @@
               {{ csrf_field() }}
               <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                 <label for="signin-email" class="control-label sr-only">Username</label>
-                <input type="text" name="username" class="form-control text-lowercase" id="signin-text" value="" placeholder="Username">
+                <input type="text" name="username" class="form-control text-transform-none" id="signin-text" value="" placeholder="Username">
                 @if ($errors->has('username'))
                   <span class="help-block">
                     <strong>{{ $errors->first('username') }}</strong>
@@ -23,7 +23,7 @@
               </div>
               <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                 <label for="signin-password" class="control-label sr-only">Password</label>
-                <input type="password" name="password" class="form-control text-lowercase" id="signin-password" value="" placeholder="Password">
+                <input type="password" name="password" class="form-control text-transform-none" id="signin-password" value="" placeholder="Password">
                 @if ($errors->has('password'))
                   <span class="help-block">
                     <strong>{{ $errors->first('password') }}</strong>

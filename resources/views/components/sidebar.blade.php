@@ -66,7 +66,7 @@
           </a>
           <div id="rollstock" class="collapse ">
             <ul class="nav">
-              @role(array('superuser','rollstock-spv'))
+              @permission('rollstock-setup')
               <li>
                 <a href="#rollstock-setup" data-toggle="collapse" class="collapsed">
                   <span>Setup<span>
@@ -82,7 +82,7 @@
                   </ul>
                 </div>
               </li>
-              @endrole
+              @endpermission
               <li>
                 <a href="#rollstock-paperroll" data-toggle="collapse" class="collapsed">
                   <span>Paper Roll<span>
