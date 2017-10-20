@@ -381,10 +381,12 @@
                 var _id = _frequents[key].id;
                 var _quality = _frequents[key].paper_quality;
                 var _grammatur = _frequents[key].paper_gramatures;
+                var _width = _frequents[key].paper_width;
                 var _remark = _frequents[key].remarks;
 
                 $('[name="pquality['+_i+']"]').val(_quality);
                 $('[name="pgram['+_i+']"]').val(_grammatur);
+                $('[name="pwidth['+_i+']"]').val(_width);
                 $('[name="premarks['+_i+']"]').val(_remark);
                 _i = _i+1;
     					});

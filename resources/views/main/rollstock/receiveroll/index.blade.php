@@ -135,7 +135,7 @@
               <div class="col-md-12">
                 <div class="table-responsive">
                   <table id="table-history" class="table table-hover table-striped" width="100%">
-                    @if (Auth::user()->can('accounting-access'))
+                    @if (Auth::user()->can('access-price'))
                       <!-- Can see price -->
                       <thead class="f12">
                         <tr>

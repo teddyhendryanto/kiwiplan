@@ -26,4 +26,5 @@ class ReceiveRoll extends Model
   public function verify_roll(){
     return $this->hasOne('App\Models\VerifyRoll');
   }
+
 }

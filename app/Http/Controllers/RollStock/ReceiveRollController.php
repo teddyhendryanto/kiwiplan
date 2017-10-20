@@ -44,7 +44,7 @@ class ReceiveRollController extends Controller
   		$site_id = $request->site_id;
       $po_num = $request->po_num;
 
-  		$order = PurchaseOrder::with('site','supplier','supplier.keys')
+  		$order = PurchaseOrder::with('purchase_order_details','site','supplier','supplier.keys')
                             ->where('site_id',$site_id)
                             ->where('po_num',$po_num)
                             ->first();
@@ -79,7 +79,7 @@ class ReceiveRollController extends Controller
     public function getLastRollCounter($rtype){
       switch ($rtype) {
         case 'AUTO':
-          $lastcounter = ReceiveRoll::select(DB::raw('ifnull(max(counter),30999) as counter'))
+          $lastcounter = ReceiveRoll::select(DB::raw('ifnull(max(counter),31999) as counter'))
           ->where('rtype',$rtype)
           ->where('yyyy',date('Y'))
           ->first();;
@@ -359,9 +359,7 @@ class ReceiveRollController extends Controller
                             'verify_roll.edi_export_details.edi_export',
                           ])
                           ->findOrFail($id);
-                          // dd($data);
-
-      // dd($data);
+                          
       return view('main.rollstock.receiveroll.edit')
               ->withSites($sites)
               ->withWidths($widths)

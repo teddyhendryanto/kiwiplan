@@ -33,4 +33,8 @@ class PurchaseOrder extends Model
   public function purchase_order_transfers(){
     return $this->hasOne('App\Models\PurchaseOrderTransfer');
   }
+
+  public function purchase_order_realizations(){
+    return $this->hasMany('App\Models\PurchaseOrderRealization');
+  }
 }

@@ -101,6 +101,29 @@ class PaperKeyController extends Controller
         //
     }
 
+    public function getPaperKeyByQuality(Request $request){
+      $supplier_id = $request->supplier_id;
+      $paper_quality = $request->paper_quality;
+
+      $paper_keys = PaperKey::where('supplier_id', $supplier_id)
+                            ->where(DB::raw("substr(paper_key,3,2)"),$paper_quality)
+                            ->get();
+
+      if($paper_keys){
+  			$output = array(
+  				'dataset' => $paper_keys,
+  				'status' => true
+  			);
+  		}
+  		else{
+  			$output = array(
+  				'status' => false
+  			);
+  		}
+
+  		return response()->json($output);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -59,6 +59,10 @@ Route::group(['middleware' => ['web']], function(){
   Route::delete('permissions/{id}','PermissionController@destroy')->name('permissions.destroy'); //->middleware('permission:role-delete');
 
   Route::prefix('accounting')->group(function () {
+    Route::prefix('setup')->group(function(){
+      Route::resource('purchase_order_frequents','Accounting\PurchaseOrderFrequentController');
+      Route::post('purchase_order_frequents_datatable','Accounting\PurchaseOrderFrequentController@getPurchaseOrderFrequentDatatable')->name('purchase_order_frequents.ajax.getPurchaseOrderFrequentDatatable');
+    });
     Route::resource('purchase_orders','Accounting\PurchaseOrderController');
     Route::get('purchase_orders/print/{id}','Accounting\PurchaseOrderController@print_po')->name('purchase_orders.print');
     Route::post('purchase_orders/site','Accounting\PurchaseOrderController@getPO')->name('purchase_orders.ajax.getPO');
@@ -97,6 +101,7 @@ Route::group(['middleware' => ['web']], function(){
       Route::post('widths_datatable','RollStock\PaperWidthController@getWidthListDatatable')->name('widths.ajax.getWidthListDatatable');
 
       Route::resource('keys','RollStock\PaperKeyController');
+      Route::post('keys/getPaperKeyByQuality','RollStock\PaperKeyController@getPaperKeyByQuality')->name('keys.ajax.getPaperKeyByQuality');
       Route::post('keys_datatable','RollStock\PaperKeyController@getKeyListDatatable')->name('keys.ajax.getKeyListDatatable');
     });
 
@@ -124,6 +129,12 @@ Route::group(['middleware' => ['web']], function(){
       Route::get('edi/export_process/{exec_type}','RollStock\EdiExportController@export_process')->name('edi.export_process');
       Route::post('edi/showHistory','RollStock\EdiExportController@showHistory')->name('edi.showHistory');
       Route::post('edi/showHistory/byUniqueRollId','RollStock\EdiExportController@showHistoryByUniqueRollId')->name('edi.showHistory.byUniqueRollId');
+    });
+
+    Route::prefix('realization')->group(function(){
+      Route::resource('purchase_order_realizations','RollStock\PurchaseOrderRealizationController',['except' => ['show','destroy']]);
+      Route::post('purchase_order_realizations/showHistory','RollStock\PurchaseOrderRealizationController@showHistory')->name('purchase_order_realizations.showHistory');
+      Route::get('purchase_order_realizations/delete/{id}','RollStock\PurchaseOrderRealizationController@delete')->name('purchase_order_realizations.delete');
     });
 
     Route::prefix('reports')->group(function(){

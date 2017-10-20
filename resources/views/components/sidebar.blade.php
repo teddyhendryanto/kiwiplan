@@ -39,6 +39,17 @@
           </a>
           <div id="accounting" class="collapse ">
             <ul class="nav">
+              <li>
+                <a href="#accounting-setup" data-toggle="collapse" class="collapsed">
+                  <span>Setup<span>
+                  <i class="icon-submenu fa fa-angle-right"></i>
+                </a>
+                <div id="accounting-setup" class="collapse ">
+                  <ul class="nav">
+                    <li><a href="{{ route('purchase_order_frequents.index') }}"><span>P.O Frequent</span></a></li>
+                  </ul>
+                </div>
+              </li>
               <li><a href="{{ route('purchase_orders.index') }}"><span>P.O Kertas</span></a></li>
               <li><a href="{{ route('exchange_rates.index') }}"><span>Kurs</span></a></li>
               <li>
@@ -91,9 +102,10 @@
                 <div id="rollstock-paperroll" class="collapse ">
                   <ul class="nav">
                     <li><a href="{{ route('receiveroll.index') }}"><span>Penerimaan Roll</span></a></li>
-                    @role(array('superuser','rollstock-spv'))
+                    @role(array('superuser','rollstock-head','rollstock-spv'))
                     <li><a href="{{ route('verifyroll.index') }}"><span>Verifikasi Roll</span></a></li>
                     <li><a href="{{ route('edi.index') }}"><span>Export EDI</span></a></li>
+                    <li><a href="{{ route('purchase_order_realizations.index') }}"><span>Realisasi P.O</span></a></li>
                     @endrole
                   </ul>
                 </div>
